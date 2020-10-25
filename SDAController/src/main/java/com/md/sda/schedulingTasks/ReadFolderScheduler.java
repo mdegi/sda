@@ -19,7 +19,7 @@ public class ReadFolderScheduler {
     //a scheduled method should have the void return type
     //a method should not accept any parameters
     //options are fixedRate and fixedDelay
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRateString = "${fileScanFixedRateMilliSeconds}")
     public void reportCurrentTime() {
         log.info("The time is now {}", dateFormat.format(new Date()));
     }

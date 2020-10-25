@@ -9,7 +9,13 @@ public class AppConfig {
     @Value("${fileSystemPath:defaultPath}")
     private String fileSystemPath;
 
+    @Value("${fileScanFixedRateMilliSeconds}")
+    private Integer fileScanFixedRateMilliSeconds;
+
     public String getFileSystemPath() {
         return fileSystemPath;
+    }
+    public int getFileScanFixedRateMilliSeconds() {
+        return fileScanFixedRateMilliSeconds;
     }
 }

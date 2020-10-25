@@ -12,10 +12,16 @@ public class AppConfig {
     @Value("${fileScanFixedRateMilliSeconds}")
     private Integer fileScanFixedRateMilliSeconds;
 
+    @Value("${fileScanInitialDelayMilliSeconds}")
+    private Integer fileScanInitialDelayMilliSeconds;
+
     public String getFileSystemPath() {
         return fileSystemPath;
     }
     public int getFileScanFixedRateMilliSeconds() {
         return fileScanFixedRateMilliSeconds;
+    }
+    public int getFileScanInitialDelayMilliSeconds() {
+        return fileScanInitialDelayMilliSeconds;
     }
 }

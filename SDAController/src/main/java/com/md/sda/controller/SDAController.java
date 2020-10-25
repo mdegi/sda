@@ -24,7 +24,8 @@ public class SDAController {
     String getConfigVarsMapping() {
         return "Configured Vars:" +
                 "<br/>fileSystemPath : " + appConfig.getFileSystemPath() +
-                "<br/>fileScanFixedRateMilliSeconds: " + appConfig.getFileScanFixedRateMilliSeconds();
+                "<br/>fileScanFixedRateMilliSeconds: " + appConfig.getFileScanFixedRateMilliSeconds() +
+                "<br/>fileScanInitialDelayMilliSeconds: " + appConfig.getFileScanInitialDelayMilliSeconds();
     }
 
     @RequestMapping(value = FILE_SYSTEM_PATH_MAPPING,

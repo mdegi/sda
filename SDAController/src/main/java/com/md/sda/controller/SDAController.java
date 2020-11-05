@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.md.sda.config.ControllerConstants.*;
 
-
 @RefreshScope
 @RestController
 public class SDAController {
@@ -33,5 +32,6 @@ public class SDAController {
     String getFileSystemPath() {
         return "Configured File System Path is: " + appConfig.getFileSystemPath();
     }
+
 
 }

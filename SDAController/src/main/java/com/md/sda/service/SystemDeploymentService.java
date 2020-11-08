@@ -9,6 +9,10 @@ public class SystemDeploymentService {
 
     private MongoTemplate mongoTemplate;
 
+    public MongoTemplate getMongoTemplate() {
+        return mongoTemplate;
+    }
+
     public void setMongoTemplate(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }

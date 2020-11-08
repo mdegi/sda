@@ -1,34 +1,37 @@
 package com.md.sda.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+import java.util.List;
 
 @Document
+@Getter
+@NoArgsConstructor
 public class SystemDeployment {
 
     @Id
     public String id;
 
-    public String systemName;;
-    public String developer;
-    public String peerReviewer;
-    public String status;
+    public Date deploymentDate;;
+    private String deploymentDescription;
 
-    public SystemDeployment() {}
+    private List<AppSystem> appSystems;
 
-    public SystemDeployment(String systemName, String developer, String peerReviewer, String status) {
-        this.systemName = systemName;
-        this.developer = developer;
-        this.peerReviewer = peerReviewer;
-        this.status = status;
+    public SystemDeployment(Date deploymentDate, String deploymentDescription, List<AppSystem> appSystems) {
+        this.deploymentDate = deploymentDate;
+        this.deploymentDescription = deploymentDescription;
+        this.appSystems = appSystems;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "SystemDeployment[id=%s, systemName='%s', developer='%s', peerReviewer='%s', peerReviewer='%s']",
-                id, systemName, developer, peerReviewer, status);
+                "SystemDeployment[id=%s, deploymentDate='%s', deploymentDescription='%s', appSystems='%s']",
+                id, deploymentDate.toString(), deploymentDescription, appSystems);
     }
 
 }

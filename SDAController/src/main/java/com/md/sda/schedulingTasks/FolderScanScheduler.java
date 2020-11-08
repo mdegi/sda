@@ -2,10 +2,12 @@ package com.md.sda.schedulingTasks;
 import com.md.sda.config.AppConfig;
 import com.md.sda.objects.FileListDetails;
 import com.md.sda.objects.OSFile;
+import com.md.sda.service.SystemDeploymentService;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -28,14 +30,22 @@ import java.util.stream.Stream;
 @ManagedResource(objectName = "jmxSDAController:name=ReadFolderSchedulerMBean")
 public class FolderScanScheduler {
 
+    final MongoTemplate mongoTemplate;
+
     private static final Logger log = LoggerFactory.getLogger(FolderScanScheduler.class);
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     private Set<OSFile> lastScannedFileSet;
     private final AppConfig appConfig;
+    private final SystemDeploymentService systemDeploymentService;
 
-    public FolderScanScheduler(AppConfig appConfig) {
+    public FolderScanScheduler(AppConfig appConfig, SystemDeploymentService systemDeploymentService, MongoTemplate mongoTemplate) {
         this.appConfig = appConfig;
+        this.systemDeploymentService = systemDeploymentService;
+        if (systemDeploymentService.getMongoTemplate() == null) {
+            systemDeploymentService.setMongoTemplate(mongoTemplate);
+        }
+        this.mongoTemplate = mongoTemplate;
     }
 
     //a scheduled method should have the void return type

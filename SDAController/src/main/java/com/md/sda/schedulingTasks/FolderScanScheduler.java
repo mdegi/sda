@@ -1,4 +1,5 @@
 package com.md.sda.schedulingTasks;
+
 import com.md.sda.config.AppConfig;
 import com.md.sda.objects.FileListDetails;
 import com.md.sda.objects.OSFile;
@@ -54,11 +55,12 @@ public class FolderScanScheduler {
     @Scheduled(fixedDelayString = "${fileScanFixedRateMilliSeconds}", initialDelayString = "${fileScanInitialDelayMilliSeconds}")
     public void fileChangesScheduler() {
         log.info("The time is now {}", dateFormat.format(new Date()));
-        boolean filesScanned = processFileChangesIfAny();
+        processFileChangesIfAny();
+        //boolean filesScanned = processFileChangesIfAny();
     }
 
     @ManagedOperation
-    public boolean processFileChangesIfAny() {
+    public void processFileChangesIfAny() {
         FileListDetails comparedFiles = new FileListDetails();
 
         if (lastScannedFileSet == null) {
@@ -66,30 +68,32 @@ public class FolderScanScheduler {
         }
 
         try {
-            Set<Path> currentFileList = getFilePaths(appConfig.getFileSystemPath(), 1);
+            String xlsxFileType = "xlsx";
+            int directoryScanLevel_1 = 1;
+            Set<Path> currentFileList = getFilePaths(appConfig.getFileSystemPath(), directoryScanLevel_1, xlsxFileType);
             if (lastScannedFileSet.isEmpty()) {
                 lastScannedFileSet.addAll(currentFileList.stream().map(this::getOSFile).collect(Collectors.toSet()));
                 comparedFiles.getNewFiles().addAll(lastScannedFileSet);
-                return true;
+            } else {
+                comparedFiles = compareFiles(currentFileList);
+                lastScannedFileSet.clear();
+                lastScannedFileSet.addAll(comparedFiles.getNewFiles());
+                lastScannedFileSet.removeAll(comparedFiles.getDeletedFiles());
+                lastScannedFileSet.addAll(comparedFiles.getChangedFiles());
+                lastScannedFileSet.addAll(comparedFiles.getNoChangeFiles());
             }
-            comparedFiles = compareFiles(currentFileList);
-            lastScannedFileSet.clear();
-            lastScannedFileSet.addAll(comparedFiles.getNewFiles());
-            lastScannedFileSet.removeAll(comparedFiles.getDeletedFiles());
-            lastScannedFileSet.addAll(comparedFiles.getChangedFiles());
-            lastScannedFileSet.addAll(comparedFiles.getNoChangeFiles());
+            //process fileChanges into DB
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
 
-        return true;
     }
 
-    private Set<Path> getFilePaths(String dir, int depth) throws IOException {
+    private Set<Path> getFilePaths(String dir, int depth, String fileType) throws IOException {
         try (Stream<Path> stream = Files.walk(Paths.get(dir), depth)) {
             return stream
                     .filter(file -> !Files.isDirectory(file))
+                    .filter(file -> fileType.equals(file.getFileName().toString().substring(file.getFileName().toString().length() - fileType.length())))
                     .collect(Collectors.toSet());
         }
     }

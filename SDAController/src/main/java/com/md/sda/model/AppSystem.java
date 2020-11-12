@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -13,8 +12,10 @@ import java.util.List;
 public class AppSystem {
 
     private String sponsor;
-    private String systemName;
+
     private String status;
+    private String stagingStatus;
+    private String systemName;
     private String projectInitiative;
     private String deploymentInstructions;
 
@@ -25,17 +26,13 @@ public class AppSystem {
     private List<String> contactPerson;
     private List<String> peerReviewers;
 
-    private String decPostDeploymentJiraRef;
-
     private int actualDeploymentDurationStg;
     private int projectedDuration;
     private int actualDeploymentDurationProd;
 
     private boolean canBeDoneDuringTheDay;
 
-    private Date deploymentApplicationDate;
-
-    private String deploymentAutomatiom;
-
+    private String deploymentAutomation;
+    private String decPostDeploymentJiraRef;
 
 }

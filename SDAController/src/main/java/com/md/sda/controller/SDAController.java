@@ -3,7 +3,6 @@ package com.md.sda.controller;
 import com.md.sda.config.AppConfig;
 import com.md.sda.model.SystemDeployment;
 import com.md.sda.service.SystemDeploymentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -23,7 +22,6 @@ import static com.md.sda.config.ControllerConstants.*;
 @RestController
 public class SDAController implements CommandLineRunner {
 
-    @Autowired
     MongoTemplate mongoTemplate;
 
     private final AppConfig appConfig;
@@ -52,7 +50,7 @@ public class SDAController implements CommandLineRunner {
     @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_DATE,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
-    public ResponseEntity<?> getSystemsByDeploymentByDate(@PathVariable String deploymentDate) {
+    public ResponseEntity<?> getSystemsDeploymentByDate(@PathVariable String deploymentDate) {
         if (isValidDate(deploymentDate)) {
             return new ResponseEntity<>("Date parameter not in correct format", HttpStatus.BAD_REQUEST);
         } else {
@@ -63,7 +61,7 @@ public class SDAController implements CommandLineRunner {
     @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_STATUS,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
-    public ResponseEntity<?> getSystemsByDeploymentByStatus(@PathVariable String deploymentStatus) {
+    public ResponseEntity<?> getSystemsDeploymentByStatus(@PathVariable String deploymentStatus) {
 
         if (deploymentStatus == null  || deploymentStatus.equals("") || Arrays.stream(DeploymentStatus.values()).noneMatch(d -> d.toString().equals(deploymentStatus))) {
             return new ResponseEntity<>("Invalid deployment status value", HttpStatus.BAD_REQUEST);

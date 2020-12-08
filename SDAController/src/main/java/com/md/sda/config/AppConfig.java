@@ -15,13 +15,16 @@ public class AppConfig {
     @Value("${fileSystemPath:defaultPath}")
     private String fileSystemPath;
 
+    @Value("${fileExtension}")
+    private String fileExtension;
+
     @Value("${fileScanFixedRateMilliSeconds}")
     private  Integer fileScanFixedRateMilliSeconds;
 
     @Value("${fileScanInitialDelayMilliSeconds}")
     private  Integer fileScanInitialDelayMilliSeconds;
 
-    @Value("${mongDBConectDatabase}")
+    @Value("${mongDBConnectDatabase}")
     private String dbName;
 
     @Value("${mongoDBURL}")

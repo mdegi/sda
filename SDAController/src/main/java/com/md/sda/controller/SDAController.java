@@ -3,26 +3,32 @@ package com.md.sda.controller;
 import com.md.sda.config.AppConfig;
 import com.md.sda.model.SystemDeployment;
 import com.md.sda.service.SystemDeploymentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.constraints.Pattern;
 import java.util.Arrays;
 
 import static com.md.sda.config.ControllerConstants.*;
 
 @RefreshScope
 @RestController
+@Validated
 public class SDAController implements CommandLineRunner {
 
-    MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
 
     private final AppConfig appConfig;
     private final SystemDeploymentService systemDeploymentService;
@@ -41,28 +47,24 @@ public class SDAController implements CommandLineRunner {
     public String getConfigVarsMapping() {
         return "Configured Vars:" +
                 "<br/>fileSystemPath : " + appConfig.getFileSystemPath() +
+                "<br/>fileExtension : " + appConfig.getFileExtension() +
                 "<br/>fileScanFixedRateMilliSeconds: " + appConfig.getFileScanFixedRateMilliSeconds() +
                 "<br/>fileScanInitialDelayMilliSeconds: " + appConfig.getFileScanInitialDelayMilliSeconds() +
-                "<br/>mongDBConectDatabase: " + appConfig.getDbName() +
+                "<br/>mongDBConnectDatabase: " + appConfig.getDbName() +
                 "<br/>mongoDBURL: " + appConfig.getDbURL();
     }
 
     @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_DATE,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
-    public ResponseEntity<?> getSystemsDeploymentByDate(@PathVariable String deploymentDate) {
-        if (isValidDate(deploymentDate)) {
-            return new ResponseEntity<>("Date parameter not in correct format", HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(new SystemDeployment(), HttpStatus.OK);
-        }
+    public ResponseEntity<?> getSystemsDeploymentByDate(@PathVariable(DEPLOYMENT_DATE_VAR) @Pattern(regexp=MAPPING_DATE_REGEX) String deploymentDate) {
+        return new ResponseEntity<>(new SystemDeployment(), HttpStatus.OK);
     }
 
     @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_STATUS,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     public ResponseEntity<?> getSystemsDeploymentByStatus(@PathVariable String deploymentStatus) {
-
         if (deploymentStatus == null  || deploymentStatus.equals("") || Arrays.stream(DeploymentStatus.values()).noneMatch(d -> d.toString().equals(deploymentStatus))) {
             return new ResponseEntity<>("Invalid deployment status value", HttpStatus.BAD_REQUEST);
         } else {
@@ -73,12 +75,8 @@ public class SDAController implements CommandLineRunner {
     @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENT_DURATION_BY_DATE,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
-    public ResponseEntity<?> getDeploymentTotalDurationToDeployByDate(@PathVariable String deploymentDate) {
-        if (isValidDate(deploymentDate)) {
-            return new ResponseEntity<>("Date parameter not in correct format", HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(new SystemDeployment(), HttpStatus.OK);
-        }
+    public ResponseEntity<?> getDeploymentTotalDurationToDeployByDate(@PathVariable(DEPLOYMENT_DATE_VAR) @Pattern(regexp=MAPPING_DATE_REGEX) String deploymentDate) {
+        return new ResponseEntity<>(new SystemDeployment(), HttpStatus.OK);
     }
 
     @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENT_WITHIN_TIME_RANGE,
@@ -86,6 +84,8 @@ public class SDAController implements CommandLineRunner {
             method = RequestMethod.GET)
     public ResponseEntity<?> getAllSystemDeploymentsWithinDateTimeRange(@PathVariable String timeFrom,
                                                                         @PathVariable String timeTo) {
+        // proper way is to throw an exception here and handle with aspects
+        //and use validation with annotations
         if (!sdaControllerHelper.isValidTime(timeFrom) || !sdaControllerHelper.isValidTime(timeTo)) {
             return new ResponseEntity<>("Time parameter(s) not in correct format", HttpStatus.BAD_REQUEST);
         } else {
@@ -102,10 +102,6 @@ public class SDAController implements CommandLineRunner {
         } else {
             return new ResponseEntity<>(new SystemDeployment(), HttpStatus.OK);
         }
-    }
-
-    private boolean isValidDate(String deploymentDate) {
-        return (deploymentDate == null  || deploymentDate.equals("") || !sdaControllerHelper.isValidDate(deploymentDate));
     }
 
     @Override

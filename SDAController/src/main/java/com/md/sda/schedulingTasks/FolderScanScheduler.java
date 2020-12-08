@@ -60,6 +60,11 @@ public class FolderScanScheduler {
     }
 
     @ManagedOperation
+    public void processFileChangesIfAnyJMX() {
+        log.info("External call through JMX to process any file changes {}", dateFormat.format(new Date()));
+        processFileChangesIfAny();
+    }
+
     public void processFileChangesIfAny() {
         FileListDetails comparedFiles = new FileListDetails();
 
@@ -68,7 +73,7 @@ public class FolderScanScheduler {
         }
 
         try {
-            String xlsxFileType = "xlsx";
+            String xlsxFileType = appConfig.getFileExtension();
             int directoryScanLevel_1 = 1;
             Set<Path> currentFileList = getFilePaths(appConfig.getFileSystemPath(), directoryScanLevel_1, xlsxFileType);
             if (lastScannedFileSet.isEmpty()) {

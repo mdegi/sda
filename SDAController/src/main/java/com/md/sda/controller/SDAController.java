@@ -2,6 +2,7 @@ package com.md.sda.controller;
 
 import com.md.sda.config.AppConfig;
 import com.md.sda.model.SystemDeployment;
+import com.md.sda.schedulingTasks.FolderScanScheduler;
 import com.md.sda.service.SystemDeploymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,6 +103,15 @@ public class SDAController implements CommandLineRunner {
         } else {
             return new ResponseEntity<>(new SystemDeployment(), HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = V1_SERVICE_RELOAD_FILES,
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
+            method = RequestMethod.POST)
+    public ResponseEntity<?> reloadFiles() {
+        FolderScanScheduler scheduler = new FolderScanScheduler(appConfig, systemDeploymentService, mongoTemplate);
+        scheduler.processFileChangesIfAnyREST();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override

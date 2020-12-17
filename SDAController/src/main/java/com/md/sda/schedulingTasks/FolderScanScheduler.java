@@ -65,6 +65,11 @@ public class FolderScanScheduler {
         processFileChangesIfAny();
     }
 
+    public void processFileChangesIfAnyREST() {
+        log.info("REST call to process any file changes {}", dateFormat.format(new Date()));
+        processFileChangesIfAny();
+    }
+
     public void processFileChangesIfAny() {
         FileListDetails comparedFiles = new FileListDetails();
 

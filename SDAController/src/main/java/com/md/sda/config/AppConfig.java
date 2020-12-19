@@ -15,6 +15,9 @@ public class AppConfig {
     @Value("${fileSystemPath:defaultPath}")
     private String fileSystemPath;
 
+    @Value("${fileNameRegex}")
+    private String filenameRegex;
+
     @Value("${fileExtension}")
     private String fileExtension;
 

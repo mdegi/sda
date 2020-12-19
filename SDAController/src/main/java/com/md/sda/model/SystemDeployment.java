@@ -2,6 +2,7 @@ package com.md.sda.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,43 +11,49 @@ import java.util.List;
 
 @Document
 @Getter
+@Setter
 @NoArgsConstructor
 public class SystemDeployment {
 
     @Id
     public String id;
 
-    public Date deploymentDate;;
-    private String deploymentDescription;
-    private String testCasesLocation;
-    private String responsibleAppSupportPerson;
-    private String responsibleAppDevOpsPerson;
-    private String responsibleCisPerson;
-
-    private List<AppSystem> appSystems;
-
-    public SystemDeployment(Date deploymentDate, String deploymentDescription,
-                            String testCasesLocation, String responsibleAppSupportPerson,
-                            String responsibleAppDevOpsPerson, String responsibleCisPerson,
-                            List<AppSystem> appSystems) {
-        this.deploymentDate = deploymentDate;
-        this.deploymentDescription = deploymentDescription;
-        this.testCasesLocation = testCasesLocation;
-        this.responsibleAppSupportPerson = responsibleAppSupportPerson;
-        this.responsibleAppDevOpsPerson = responsibleAppDevOpsPerson;
-        this.responsibleCisPerson = responsibleCisPerson;
-        this.appSystems = appSystems;
-    }
+    private int lineNumber;
+    private String sponsor;
+    private String status;
+    private String stagingStatus;
+    private String systemName;
+    private String projectInitiative;
+    private String deploymentInstructions;
+    private String dependencies;
+    private String releaseNotes;
+    private String contactPerson;
+    private String peerReviewer;
+    private String actualSTGDeploymentDurationMinutes;
+    private int projectedDurationMinutes;
+    private int actualProdDeploymentDurationMinutes;
+    private String canBeDoneDuringTheDay;
+    private String deploymentApplicationDate;
+    private String deploymentAutomation;
+    private String devPostDeploymentTasks;
+    private String deploymentDate;
 
     @Override
     public String toString() {
         return String.format(
-                "SystemDeployment[id=%s, deploymentDate='%s', deploymentDescription='%s', " +
-                        "testCasesLocation,=%s responsibleAppSupportPerson=%s," +
-                        "responsibleAppDevOpsPerson=%s, responsibleCisPerson=%s," +
-                        "appSystems='%s']",
-                id, deploymentDate.toString(), deploymentDescription, testCasesLocation,  responsibleAppSupportPerson,
-                responsibleAppDevOpsPerson, responsibleCisPerson, appSystems);
+                "SystemDeployment[id=%s, lineNumber='%s', sponsor='%s', " +
+                        "status,=%s stagingStatus=%s," +
+                        "systemName=%s, projectInitiative=%s," +
+                        "deploymentInstructions=%s, dependencies=%s," +
+                        "releaseNotes=%s, contactPerson=%s," +
+                        "peerReviewer=%s, actualSTGDeploymentDurationMinutes=%s," +
+                        "projectedDurationMinutes=%s, actualProdDeploymentDurationMinutes=%s," +
+                        "canBeDoneDuringTheDay=%s, deploymentApplicationDate=%s," +
+                        "deploymentAutomation=%s, devPostDeploymentTasks='%sm deploymentDate=%s']",
+                id, lineNumber, sponsor, status,  stagingStatus, systemName, projectInitiative,
+                deploymentInstructions, dependencies, releaseNotes, contactPerson, peerReviewer, actualSTGDeploymentDurationMinutes,
+                projectedDurationMinutes, actualProdDeploymentDurationMinutes, canBeDoneDuringTheDay, deploymentApplicationDate,
+                deploymentAutomation, devPostDeploymentTasks, deploymentDate);
     }
 
 }

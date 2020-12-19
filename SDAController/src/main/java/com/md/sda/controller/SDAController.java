@@ -4,8 +4,6 @@ import com.md.sda.config.AppConfig;
 import com.md.sda.model.SystemDeployment;
 import com.md.sda.schedulingTasks.FolderScanScheduler;
 import com.md.sda.service.SystemDeploymentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.Pattern;
 import java.util.Arrays;
 

@@ -1,6 +1,8 @@
 package com.md.sda.service;
 
 import com.md.sda.model.SystemDeployment;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,12 @@ public class SystemDeploymentService {
 
     public void insertRecord(SystemDeployment systemDeployment) {
         mongoTemplate.insert(systemDeployment);
+    }
+
+    /// fix this
+    public void deleteRecords(String deploymentDate) {
+        Bson filter = new Document("deploymentDate", deploymentDate);
+        mongoTemplate.getCollection("systemDeployment").deleteMany(filter);
     }
 
 }

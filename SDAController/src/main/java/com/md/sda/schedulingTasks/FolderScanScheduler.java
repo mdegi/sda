@@ -37,7 +37,6 @@ public class FolderScanScheduler {
 
     private static final Logger log = LoggerFactory.getLogger(FolderScanScheduler.class);
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-    private static final SimpleDateFormat DB_DATE_FORMAT = new SimpleDateFormat("HH:mm:ss");
 
     private Set<OSFile> lastScannedFileSet;
     private final AppConfig appConfig;
@@ -96,9 +95,14 @@ public class FolderScanScheduler {
             }
             if (comparedFiles.fileChangesOccured()) {
                 if (!comparedFiles.getNewFiles().isEmpty()) {
-                    comparedFiles.getNewFiles().forEach(newFile -> {
-                        getDeploymentEntries(newFile).forEach(csvDeploymentEntry -> saveEntry(csvDeploymentEntry));
-                    });
+                    comparedFiles.getNewFiles().forEach(newFile -> getDeploymentEntries(newFile).forEach(csvDeploymentEntry -> saveEntry(csvDeploymentEntry, getDeploymentDateFromFileName(newFile.getFileName()))));
+                }
+                if (!comparedFiles.getDeletedFiles().isEmpty()) {
+                    comparedFiles.getDeletedFiles().forEach(deletedFile -> deleteEntries(getDeploymentDateFromFileName(deletedFile.getFileName())));
+                }
+                if (!comparedFiles.getChangedFiles().isEmpty()) {
+                    comparedFiles.getChangedFiles().forEach(changedFile -> deleteEntries(getDeploymentDateFromFileName(changedFile.getFileName())));
+                    comparedFiles.getChangedFiles().forEach(changedFile -> getDeploymentEntries(changedFile).forEach(csvDeploymentEntry -> saveEntry(csvDeploymentEntry, getDeploymentDateFromFileName(changedFile.getFileName()))));
                 }
             }
         } catch (IOException e) {
@@ -106,7 +110,19 @@ public class FolderScanScheduler {
         }
     }
 
-    private void saveEntry(CSVDeploymentEntry csvDeploymentEntry) {
+    private String getDeploymentDateFromFileName(String fileName) {
+        return fileName.substring(0,fileName.indexOf("-"));
+    }
+
+    private void deleteEntries(String deploymentDate) {
+        log.info("Deleting DB Entries: " + deploymentDate);
+
+        systemDeploymentService.deleteRecords(getDeploymentDateFromFileName(deploymentDate));
+    }
+
+    private void saveEntry(CSVDeploymentEntry csvDeploymentEntry, String deploymentDate) {
+        log.info("Saving CSV Entry: " + deploymentDate + " - " + csvDeploymentEntry.getSystemName() + " - " + csvDeploymentEntry.getContactPerson());
+
         SystemDeployment systemDeployment = new SystemDeployment();
         systemDeployment.setLineNumber(csvDeploymentEntry.getLineNumber());
         systemDeployment.setSponsor(csvDeploymentEntry.getSponsor());
@@ -126,7 +142,7 @@ public class FolderScanScheduler {
         systemDeployment.setDeploymentApplicationDate(csvDeploymentEntry.getDeploymentApplicationDate());
         systemDeployment.setDeploymentAutomation(csvDeploymentEntry.getDeploymentAutomation());
         systemDeployment.setDevPostDeploymentTasks(csvDeploymentEntry.getDevPostDeploymentTasks());
-        systemDeployment.setDeploymentDate(DB_DATE_FORMAT.format(new Date()));
+        systemDeployment.setDeploymentDate(deploymentDate);
 
         systemDeploymentService.insertRecord(systemDeployment);
     }

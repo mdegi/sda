@@ -95,6 +95,8 @@ public class FolderScanScheduler {
             }
             if (comparedFiles.fileChangesOccured()) {
                 if (!comparedFiles.getNewFiles().isEmpty()) {
+                    //delete any saved documents with the new file name in cases these exist
+                    comparedFiles.getNewFiles().forEach(newFile -> deleteEntries(getDeploymentDateFromFileName(newFile.getFileName())));
                     comparedFiles.getNewFiles().forEach(newFile -> getDeploymentEntries(newFile).forEach(csvDeploymentEntry -> saveEntry(csvDeploymentEntry, getDeploymentDateFromFileName(newFile.getFileName()))));
                 }
                 if (!comparedFiles.getDeletedFiles().isEmpty()) {

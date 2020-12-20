@@ -23,7 +23,6 @@ public class SystemDeploymentService {
         mongoTemplate.insert(systemDeployment);
     }
 
-    /// fix this
     public void deleteRecords(String deploymentDate) {
         Bson filter = new Document("deploymentDate", deploymentDate);
         mongoTemplate.getCollection("systemDeployment").deleteMany(filter);

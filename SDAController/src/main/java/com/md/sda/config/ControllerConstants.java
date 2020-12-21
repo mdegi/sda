@@ -8,7 +8,7 @@ public class ControllerConstants {
 
     public static final String V1_SERVICE_CONFIG_VARS_MAPPING = "/v1/services/configVars";
     public static final String V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_DATE = "/v1/services/deploymentDate:{deploymentDate}";
-    public static final String V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_STATUS = "/v1/services/deploymentStatus:{deploymentStatus}";
+    public static final String V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_STATUS = "/v1/services/postDeploymentTaskStatus:{deploymentStatus}";
     public static final String V1_SERVICE_SYSTEMS_DEPLOYMENT_DURATION_BY_DATE = "/v1/services/deploymentDurationByDate:{deploymentDate}";
     public static final String V1_SERVICE_SYSTEMS_DEPLOYMENT_WITHIN_TIME_RANGE = "/v1/services/deploymentTimeRange:{timeFrom}-{timeTo}";
     public static final String V1_SERVICE_DEPLOYMENTS_BY_SYSTEM = "/v1/services/system:{systemName}";

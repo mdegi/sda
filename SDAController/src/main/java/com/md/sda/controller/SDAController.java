@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Pattern;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.md.sda.config.ControllerConstants.*;
 
@@ -56,25 +57,32 @@ public class SDAController implements CommandLineRunner {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     public ResponseEntity<?> getSystemsDeploymentByDate(@PathVariable(DEPLOYMENT_DATE_VAR) @Pattern(regexp=MAPPING_DATE_REGEX) String deploymentDate) {
-        return new ResponseEntity<>(new SystemDeployment(), HttpStatus.OK);
+        return new ResponseEntity<>(systemDeploymentService.getDeploymentsByDate(deploymentDate), HttpStatus.OK);
     }
 
     @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_STATUS,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
-    public ResponseEntity<?> getSystemsDeploymentByStatus(@PathVariable String deploymentStatus) {
+    public ResponseEntity<?> getSystemsDeploymentByPostDeploymentStatus(@PathVariable String deploymentStatus) {
         if (deploymentStatus == null  || deploymentStatus.equals("") || Arrays.stream(DeploymentStatus.values()).noneMatch(d -> d.toString().equals(deploymentStatus))) {
             return new ResponseEntity<>("Invalid deployment status value", HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(new SystemDeployment(), HttpStatus.OK);
+            return new ResponseEntity<>(systemDeploymentService.getDeploymentsWithPostDeploymentStatus(deploymentStatus), HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENT_DURATION_BY_DATE,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
-    public ResponseEntity<?> getDeploymentTotalDurationToDeployByDate(@PathVariable(DEPLOYMENT_DATE_VAR) @Pattern(regexp=MAPPING_DATE_REGEX) String deploymentDate) {
-        return new ResponseEntity<>(new SystemDeployment(), HttpStatus.OK);
+    public ResponseEntity<?> getDeploymentTotalDurationToDeployByDate(@PathVariable(DEPLOYMENT_DATE_VAR)
+                                                                      @Pattern(regexp=MAPPING_DATE_REGEX) String deploymentDate) {
+        List<SystemDeployment> deploymentList = systemDeploymentService.getDeploymentsByDate(deploymentDate);
+        if (!deploymentList.isEmpty()) {
+            return  new ResponseEntity<>(deploymentList.stream()
+                                            .map(SystemDeployment::getActualProdDeploymentDurationMinutes)
+                                            .reduce(0, Integer::sum), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(0, HttpStatus.OK);
     }
 
     @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENT_WITHIN_TIME_RANGE,
@@ -98,7 +106,7 @@ public class SDAController implements CommandLineRunner {
         if (systemName == null  || systemName.equals("")) {
             return new ResponseEntity<>("System cannot be left blank in request", HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(new SystemDeployment(), HttpStatus.OK);
+            return new ResponseEntity<>(systemDeploymentService.getDeploymentsBySystem(systemName), HttpStatus.OK);
         }
     }
 

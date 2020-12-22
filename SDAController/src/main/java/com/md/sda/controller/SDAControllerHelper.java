@@ -1,50 +1,27 @@
 package com.md.sda.controller;
 
-import com.md.sda.schedulingTasks.FolderScanScheduler;
-import com.md.sda.service.SystemDeploymentService;
-import org.springframework.http.ResponseEntity;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
 @Component
+@NoArgsConstructor
 public class SDAControllerHelper {
 
-    private final SystemDeploymentService systemDeploymentService;
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
-    public SDAControllerHelper(SystemDeploymentService systemDeploymentService) {
-        this.systemDeploymentService = systemDeploymentService;
-    }
-
-    public boolean isValidDate(String sqlFormatDate) {
-        boolean validDate = false;
-
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    public Date getDate(String dateParam) {
+        Date parsedDate = null;
         try {
-            Date date = format.parse(sqlFormatDate);
-            validDate = true;
+            parsedDate = dateFormat.parse(dateParam);
+
         } catch (ParseException e) {
-            // date is not parsed
+            e.printStackTrace();
         }
-        return validDate;
-    }
-
-    public boolean isValidTime(String timeString) {
-        boolean validTime = false;
-        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
-        try {
-            TemporalAccessor time = timeFormat.parse(timeString);
-            validTime = true;
-        } catch (DateTimeParseException e) {
-            // time is not parsed
-        }
-        return validTime;
+        return parsedDate;
     }
 
 }

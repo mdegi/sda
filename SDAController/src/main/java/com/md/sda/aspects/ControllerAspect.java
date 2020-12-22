@@ -24,20 +24,20 @@ public class ControllerAspect extends SDAAspect {
 
     @Before("allMethodsPointCut()")//applying pointcut on before advice
     public void allMethodsBeforeAdvice(JoinPoint joinPoint) {
-        LOGGER.info(df.format(new Date()) + " Start: " + joinPoint.getSignature()) ;
+        LOGGER.info(df.format(new Date()) + " Start: " + joinPoint.getSignature());
     }
 
     @After("allMethodsPointCut()")//applying pointcut on before advice
     public void allMethodsAfterAdvice(JoinPoint joinPoint) {
-        LOGGER.info(df.format(new Date()) + " End: " + joinPoint.getSignature()) ;
+        LOGGER.info(df.format(new Date()) + " End: " + joinPoint.getSignature());
     }
 
     @AfterThrowing(value = "allMethodsPointCut()", throwing = "e")
     public void logException(JoinPoint joinPoint, Throwable e) throws Throwable {
         if (e instanceof ConstraintViolationException) {
-            LOGGER.error(df.format(new Date()) + " " + joinPoint.getSignature() + "Invalid parameter input or parameter does not match defined pattern" + e.getMessage()); ;
+            LOGGER.error(df.format(new Date()) + " " + joinPoint.getSignature() + "Invalid parameter input or parameter does not match defined pattern\n" + e.getMessage());
         } else {
-            LOGGER.error(df.format(new Date()) + " " + joinPoint.getSignature() + "Unknown exception occurred" + e.getMessage()); ;
+            LOGGER.error(df.format(new Date()) + " " + joinPoint.getSignature() + "Unknown exception occurred" + e.getMessage());
         }
     }
 

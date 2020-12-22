@@ -36,7 +36,7 @@ public class SystemDeployment {
     private String deploymentApplicationDate;
     private String deploymentAutomation;
     private String devPostDeploymentTasks;
-    private String deploymentDate;
+    private Date deploymentDate;
 
     @Override
     public String toString() {

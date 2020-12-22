@@ -8,6 +8,7 @@ import com.md.sda.objects.OSFile;
 import com.md.sda.service.SystemDeploymentService;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,7 +38,8 @@ public class FolderScanScheduler {
     final MongoTemplate mongoTemplate;
 
     private static final Logger log = LoggerFactory.getLogger(FolderScanScheduler.class);
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
     private Set<OSFile> lastScannedFileSet;
     private final AppConfig appConfig;
@@ -56,19 +59,18 @@ public class FolderScanScheduler {
     //options are fixedRate / fixedDelay and cron
     @Scheduled(fixedDelayString = "${fileScanFixedRateMilliSeconds}", initialDelayString = "${fileScanInitialDelayMilliSeconds}")
     public void fileChangesScheduler() {
-        log.info("The time is now {}", dateFormat.format(new Date()));
+        log.info("The time is now {}", timeFormat.format(new Date()));
         processFileChangesIfAny();
-        //boolean filesScanned = processFileChangesIfAny();
     }
 
     @ManagedOperation
     public void processFileChangesIfAnyJMX() {
-        log.info("External call through JMX to process any file changes {}", dateFormat.format(new Date()));
+        log.info("External call through JMX to process any file changes {}", timeFormat.format(new Date()));
         processFileChangesIfAny();
     }
 
     public void processFileChangesIfAnyREST() {
-        log.info("REST call to process any file changes {}", dateFormat.format(new Date()));
+        log.info("REST call to process any file changes {}", timeFormat.format(new Date()));
         processFileChangesIfAny();
     }
 
@@ -112,18 +114,18 @@ public class FolderScanScheduler {
         }
     }
 
-    private String getDeploymentDateFromFileName(String fileName) {
-        return fileName.substring(0,fileName.indexOf("-"));
+    private Date getDeploymentDateFromFileName(String fileName) {
+        return getDate(fileName.substring(0,fileName.indexOf("-")));
     }
 
-    private void deleteEntries(String deploymentDate) {
+    private void deleteEntries(Date deploymentDate) {
         log.info("Deleting DB Entries: " + deploymentDate);
 
-        systemDeploymentService.deleteRecords(getDeploymentDateFromFileName(deploymentDate));
+        systemDeploymentService.deleteRecords(deploymentDate);
     }
 
-    private void saveEntry(CSVDeploymentEntry csvDeploymentEntry, String deploymentDate) {
-        log.info("Saving CSV Entry: " + deploymentDate + " - " + csvDeploymentEntry.getSystemName() + " - " + csvDeploymentEntry.getContactPerson());
+    private void saveEntry(CSVDeploymentEntry csvDeploymentEntry, Date deploymentDate) {
+        log.info("Saving CSV Entry: " + deploymentDate + " - " + csvDeploymentEntry.getSystemName());
 
         SystemDeployment systemDeployment = new SystemDeployment();
         systemDeployment.setLineNumber(csvDeploymentEntry.getLineNumber());
@@ -147,6 +149,18 @@ public class FolderScanScheduler {
         systemDeployment.setDeploymentDate(deploymentDate);
 
         systemDeploymentService.insertRecord(systemDeployment);
+    }
+
+    private Date getDate(String deploymentDate) {
+        Date parsedDate = null;
+
+        try {
+            parsedDate = dateFormat.parse(deploymentDate);
+        } catch (ParseException e) {
+            log.error("ParseException parsing date: " + deploymentDate);
+        }
+
+        return parsedDate;
     }
 
     private List<CSVDeploymentEntry> getDeploymentEntries(OSFile osFile) {

@@ -4,13 +4,15 @@ public class ControllerConstants {
 
     private ControllerConstants() {}
 
-    public static final String DEPLOYMENT_DATE_VAR = "deploymentDate";
+    public static final String PATH_VAR_DEPLOYMENT_DATE = "deploymentDate";
+    public static final String PATH_VAR_DATE_FROM = "dateFrom";
+    public static final String PATH_VAR_DATE_TO = "dateTo";
 
     public static final String V1_SERVICE_CONFIG_VARS_MAPPING = "/v1/services/configVars";
     public static final String V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_DATE = "/v1/services/deploymentDate:{deploymentDate}";
     public static final String V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_STATUS = "/v1/services/postDeploymentTaskStatus:{deploymentStatus}";
     public static final String V1_SERVICE_SYSTEMS_DEPLOYMENT_DURATION_BY_DATE = "/v1/services/deploymentDurationByDate:{deploymentDate}";
-    public static final String V1_SERVICE_SYSTEMS_DEPLOYMENT_WITHIN_TIME_RANGE = "/v1/services/deploymentTimeRange:{timeFrom}-{timeTo}";
+    public static final String V1_SERVICE_SYSTEMS_DEPLOYMENT_WITHIN_DATE_RANGE = "/v1/services/deploymentDateRange:{dateFrom}-{dateTo}";
     public static final String V1_SERVICE_DEPLOYMENTS_BY_SYSTEM = "/v1/services/system:{systemName}";
 
     public static final String V1_SERVICE_RELOAD_FILES = "/v1/services/reload";

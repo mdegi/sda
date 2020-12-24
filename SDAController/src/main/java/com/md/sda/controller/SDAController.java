@@ -45,6 +45,7 @@ public class SDAController implements CommandLineRunner {
     public String getConfigVarsMapping() {
         return "<html>Configured Vars:" +
                 "<br/>fileSystemPath : " + appConfig.getFileSystemPath() +
+                "<br/>fileNameRegex : " + appConfig.getFilenameRegex() +
                 "<br/>fileExtension : " + appConfig.getFileExtension() +
                 "<br/>fileScanFixedRateMilliSeconds: " + appConfig.getFileScanFixedRateMilliSeconds() +
                 "<br/>fileScanInitialDelayMilliSeconds: " + appConfig.getFileScanInitialDelayMilliSeconds() +

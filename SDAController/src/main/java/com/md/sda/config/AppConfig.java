@@ -34,7 +34,11 @@ public class AppConfig {
     private String dbURL;
 
     public MongoClient mongoClient() {
-        return MongoClients.create(dbURL);
+        String connectionString = dbURL;
+        if (System.getProperty("mongoDBURL") != null) {
+            connectionString = System.getProperty("mongoDBURL");
+        }
+        return MongoClients.create(connectionString);
     }
 
     public @Bean

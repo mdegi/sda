@@ -18,15 +18,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic();
         http.csrf().disable().authorizeRequests()
-                .anyRequest().authenticated();
+                .antMatchers("/v1/services/reload").permitAll()
+                .antMatchers("/v1/services/**")
+                .authenticated();
     }
 
     //Using In memory user authentication which values might be stored in some eternal properties file
     //However other types of authentication can be used such as JDBC and LDAP
+    //To create a customer Authentication Provider, you can also create a Custom Authentication Provider implementing AuthenticationProvider
     @Bean
     public InitializingBean initializer(UserDetailsManager manager) {
         return () -> {
-            UserDetails defaultUser = User.withDefaultPasswordEncoder().username("defaultUser").password("defaultPassword").roles("USER").build();
+            UserDetails defaultUser = User.withDefaultPasswordEncoder()
+                    .username("defaultUser")
+                    .password("defaultPassword")
+                    .roles("USER").build();
             manager.createUser(defaultUser);
         };
     }

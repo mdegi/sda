@@ -1,6 +1,7 @@
 package com.md.sda.config;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.actuate.audit.InMemoryAuditEventRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,6 +36,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .roles("USER").build();
             manager.createUser(defaultUser);
         };
+    }
+
+    //Enable audit events
+    @Bean
+    public InMemoryAuditEventRepository repository(){
+        return new InMemoryAuditEventRepository();
     }
 
 }

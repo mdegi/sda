@@ -6,3 +6,4 @@ RUN mkdir /depExports
 ARG JAR_FILE
 COPY ${JAR_FILE} sdacontroller.jar
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom", "-jar", "-DmongoDBURL=mongodb://host.docker.internal:27016", "/sdacontroller.jar"]
+#run docker file using:  docker run -p 8180:8180 -t sda/sdacontroller

@@ -17,6 +17,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //other variances here may include mvcMatchers and hasAuthority() method
         http.httpBasic();
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/v1/services/reload").permitAll()

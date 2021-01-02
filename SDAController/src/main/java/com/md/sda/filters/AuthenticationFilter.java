@@ -13,7 +13,8 @@ import java.util.Enumeration;
 public class AuthenticationFilter implements Filter {
 
     /**
-     * Setting a constant here for proof of concept. Such details should be stored in some external config file
+     * Setting a constant here for proof of concept.
+     * Such details should be stored in some external config file
      */
     private final String PUBLIC_KEY = "public_key";
     private final String PUBLIC_KEY_VALUE = "123456";

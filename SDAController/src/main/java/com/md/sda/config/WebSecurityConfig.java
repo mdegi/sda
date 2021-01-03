@@ -20,8 +20,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //other variances here may include mvcMatchers and hasAuthority() method
         http.httpBasic();
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/v1/services/reload").permitAll()
-                .antMatchers("/v1/services/**")
+                .antMatchers(ControllerConstants.SERVICE_RELOAD_FILES).permitAll()
+                .antMatchers(ControllerConstants.URL_VERSION + ControllerConstants.API_URL_NAME + "/**")
                 .authenticated();
     }
 

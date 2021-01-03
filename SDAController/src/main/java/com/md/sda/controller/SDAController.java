@@ -40,7 +40,7 @@ public class SDAController implements CommandLineRunner {
         sdaControllerHelper = new SDAControllerHelper();
     }
 
-    @RequestMapping(value = V1_SERVICE_CONFIG_VARS_MAPPING,
+    @RequestMapping(value = SERVICE_CONFIG_VARS_MAPPING,
             method = RequestMethod.GET)
     public String getConfigVarsMapping() {
         return "<html>Configured Vars:" +
@@ -54,14 +54,14 @@ public class SDAController implements CommandLineRunner {
                 "</html>";
     }
 
-    @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_DATE,
+    @RequestMapping(value = SERVICE_SYSTEMS_DEPLOYMENTS_BY_DATE,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     public ResponseEntity<?> getSystemsDeploymentByDate(@PathVariable(PATH_VAR_DEPLOYMENT_DATE) @Pattern(regexp=MAPPING_DATE_REGEX) String deploymentDate) {
         return new ResponseEntity<>(systemDeploymentService.getDeploymentsByDate(sdaControllerHelper.getDate(deploymentDate)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENTS_BY_STATUS,
+    @RequestMapping(value = SERVICE_SYSTEMS_DEPLOYMENTS_BY_STATUS,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     public ResponseEntity<?> getSystemsDeploymentByPostDeploymentStatus(@PathVariable String deploymentStatus) {
@@ -72,7 +72,7 @@ public class SDAController implements CommandLineRunner {
         }
     }
 
-    @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENT_DURATION_BY_DATE,
+    @RequestMapping(value = SERVICE_SYSTEMS_DEPLOYMENT_DURATION_BY_DATE,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     public ResponseEntity<?> getDeploymentTotalDurationToDeployByDate(@PathVariable(PATH_VAR_DEPLOYMENT_DATE)
@@ -86,7 +86,7 @@ public class SDAController implements CommandLineRunner {
         return new ResponseEntity<>(0, HttpStatus.OK);
     }
 
-    @RequestMapping(value = V1_SERVICE_SYSTEMS_DEPLOYMENT_WITHIN_DATE_RANGE,
+    @RequestMapping(value = SERVICE_SYSTEMS_DEPLOYMENT_WITHIN_DATE_RANGE,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     public ResponseEntity<?> getAllSystemDeploymentsWithinDateTimeRange(@PathVariable(PATH_VAR_DATE_FROM) @Pattern(regexp = MAPPING_DATE_REGEX) String dateFrom,
@@ -94,7 +94,7 @@ public class SDAController implements CommandLineRunner {
             return new ResponseEntity<>(systemDeploymentService.getDeploymentsByDateRange(sdaControllerHelper.getDate(dateFrom), sdaControllerHelper.getDate(dateTo)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = V1_SERVICE_DEPLOYMENTS_BY_SYSTEM,
+    @RequestMapping(value = SERVICE_DEPLOYMENTS_BY_SYSTEM,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     public ResponseEntity<?> getAllDeploymentsBySystem(@PathVariable String systemName) {
@@ -105,7 +105,7 @@ public class SDAController implements CommandLineRunner {
         }
     }
 
-    @RequestMapping(value = V1_SERVICE_RELOAD_FILES,
+    @RequestMapping(value = SERVICE_RELOAD_FILES,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.POST)
     public ResponseEntity<?> reloadFiles() {

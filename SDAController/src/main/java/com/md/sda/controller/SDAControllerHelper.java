@@ -17,7 +17,6 @@ public class SDAControllerHelper {
         Date parsedDate = null;
         try {
             parsedDate = dateFormat.parse(dateParam);
-
         } catch (ParseException e) {
             e.printStackTrace();
         }

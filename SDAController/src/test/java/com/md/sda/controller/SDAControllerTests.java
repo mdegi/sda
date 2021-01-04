@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class SDAControllerTest {
+public class SDAControllerTests {
 
     @Mock
     FolderScanScheduler scheduler;
@@ -128,6 +128,7 @@ public class SDAControllerTest {
         List<SystemDeployment> deploymentList = new ArrayList<>();
         deploymentList.add(new SystemDeployment());
 
+        when(sdaControllerHelper.getDate(anyString())).thenReturn(new Date());
         when(systemDeploymentService.getDeploymentsByDateRange(sdaControllerHelper.getDate(dateFrom),sdaControllerHelper.getDate(dateTo))).thenReturn(deploymentList);
         assertTrue(controller.getAllSystemDeploymentsWithinDateRange(dateFrom, dateTo).getStatusCode().equals(HttpStatus.OK));
     }

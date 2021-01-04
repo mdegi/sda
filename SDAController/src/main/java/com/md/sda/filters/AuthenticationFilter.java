@@ -1,6 +1,5 @@
 package com.md.sda.filters;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -24,7 +23,6 @@ public class AuthenticationFilter implements Filter {
         boolean authorised = false;
 
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-
         Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();

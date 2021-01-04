@@ -21,7 +21,7 @@ public class FileListDetails implements Serializable {
         noChangeFiles = new HashSet<>();
     }
 
-    public boolean fileChangesOccured() {
+    public boolean fileChangesOccurred() {
         return (!newFiles.isEmpty() || !changedFiles.isEmpty() || !deletedFiles.isEmpty());
     }
 

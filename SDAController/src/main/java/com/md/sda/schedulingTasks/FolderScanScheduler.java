@@ -95,7 +95,7 @@ public class FolderScanScheduler {
                 lastScannedFileSet.addAll(comparedFiles.getChangedFiles());
                 lastScannedFileSet.addAll(comparedFiles.getNoChangeFiles());
             }
-            if (comparedFiles.fileChangesOccured()) {
+            if (comparedFiles.fileChangesOccurred()) {
                 if (!comparedFiles.getNewFiles().isEmpty()) {
                     //delete any saved documents with the new file name in cases these exist
                     comparedFiles.getNewFiles().forEach(newFile -> deleteEntries(getDeploymentDateFromFileName(newFile.getFileName())));

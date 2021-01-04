@@ -6,25 +6,25 @@ import java.util.List;
 
 public interface DeploymentEntry {
 
-    public int getLineNumber();
-    public String getSponsor();
-    public String getStatus();
-    public String getStagingStatus();
-    public String getSystemName();
-    public String getProjectInitiative();
-    public String getDeploymentInstructions();
-    public String getDependencies();
-    public String getReleaseNotes();
-    public String getContactPerson();
-    public String getPeerReviewer();
-    public String getActualSTGDeploymentDurationMinutes();
-    public int getProjectedDurationMinutes();
-    public int getActualProdDeploymentDurationMinutes();
-    public String getCanBeDoneDuringTheDay();
-    public String getDeploymentApplicationDate();
-    public String getDeploymentAutomation();
-    public String getDevPostDeploymentTasks();
+    int getLineNumber();
+    String getSponsor();
+    String getStatus();
+    String getStagingStatus();
+    String getSystemName();
+    String getProjectInitiative();
+    String getDeploymentInstructions();
+    String getDependencies();
+    String getReleaseNotes();
+    String getContactPerson();
+    String getPeerReviewer();
+    String getActualSTGDeploymentDurationMinutes();
+    int getProjectedDurationMinutes();
+    int getActualProdDeploymentDurationMinutes();
+    String getCanBeDoneDuringTheDay();
+    String getDeploymentApplicationDate();
+    String getDeploymentAutomation();
+    String getDevPostDeploymentTasks();
 
-    public List<DeploymentEntry> getDeploymentEntries(OSFile osFile);
+    List<DeploymentEntry> getDeploymentEntries(OSFile osFile);
 
 }

@@ -1,14 +1,11 @@
 package com.md.sda.schedulingTasks;
 
 import com.md.sda.config.AppConfig;
-import com.md.sda.model.CSVDeploymentEntry;
+import com.md.sda.model.DeploymentEntry;
 import com.md.sda.model.SystemDeployment;
 import com.md.sda.objects.FileListDetails;
 import com.md.sda.objects.OSFile;
 import com.md.sda.service.SystemDeploymentService;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
-import lombok.SneakyThrows;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,17 +42,20 @@ public class FolderScanScheduler {
     private final AppConfig appConfig;
     private final SystemDeploymentService systemDeploymentService;
 
-    public FolderScanScheduler(AppConfig appConfig, SystemDeploymentService systemDeploymentService, MongoTemplate mongoTemplate) {
+    private final DeploymentEntry deploymentEntry;
+
+    public FolderScanScheduler(AppConfig appConfig, SystemDeploymentService systemDeploymentService, MongoTemplate mongoTemplate, DeploymentEntry deploymentEntry) {
         this.appConfig = appConfig;
         this.systemDeploymentService = systemDeploymentService;
         if (systemDeploymentService.getMongoTemplate() == null) {
             systemDeploymentService.setMongoTemplate(mongoTemplate);
         }
         this.mongoTemplate = mongoTemplate;
+        this.deploymentEntry = deploymentEntry;
     }
 
     //a scheduled method should have the void return type
-    //a method should not accept any parameters
+    //such method should not accept any parameters
     //options are fixedRate / fixedDelay and cron
     @Scheduled(fixedDelayString = "${fileScanFixedRateMilliSeconds}", initialDelayString = "${fileScanInitialDelayMilliSeconds}")
     public void fileChangesScheduler() {
@@ -99,14 +99,14 @@ public class FolderScanScheduler {
                 if (!comparedFiles.getNewFiles().isEmpty()) {
                     //delete any saved documents with the new file name in cases these exist
                     comparedFiles.getNewFiles().forEach(newFile -> deleteEntries(getDeploymentDateFromFileName(newFile.getFileName())));
-                    comparedFiles.getNewFiles().forEach(newFile -> getDeploymentEntries(newFile).forEach(csvDeploymentEntry -> saveEntry(csvDeploymentEntry, getDeploymentDateFromFileName(newFile.getFileName()))));
+                    comparedFiles.getNewFiles().forEach(newFile -> deploymentEntry.getDeploymentEntries(newFile).forEach(dpEntry -> saveEntry(dpEntry, getDeploymentDateFromFileName(newFile.getFileName()))));
                 }
                 if (!comparedFiles.getDeletedFiles().isEmpty()) {
                     comparedFiles.getDeletedFiles().forEach(deletedFile -> deleteEntries(getDeploymentDateFromFileName(deletedFile.getFileName())));
                 }
                 if (!comparedFiles.getChangedFiles().isEmpty()) {
                     comparedFiles.getChangedFiles().forEach(changedFile -> deleteEntries(getDeploymentDateFromFileName(changedFile.getFileName())));
-                    comparedFiles.getChangedFiles().forEach(changedFile -> getDeploymentEntries(changedFile).forEach(csvDeploymentEntry -> saveEntry(csvDeploymentEntry, getDeploymentDateFromFileName(changedFile.getFileName()))));
+                    comparedFiles.getChangedFiles().forEach(changedFile -> deploymentEntry.getDeploymentEntries(changedFile).forEach(dpEntry -> saveEntry(dpEntry, getDeploymentDateFromFileName(changedFile.getFileName()))));
                 }
             }
         } catch (IOException e) {
@@ -124,28 +124,28 @@ public class FolderScanScheduler {
         systemDeploymentService.deleteRecords(deploymentDate);
     }
 
-    private void saveEntry(CSVDeploymentEntry csvDeploymentEntry, Date deploymentDate) {
-        log.info("Saving CSV Entry: " + deploymentDate + " - " + csvDeploymentEntry.getSystemName());
+    private void saveEntry(DeploymentEntry deploymentEntry, Date deploymentDate) {
+        log.info("Saving Deployment Entry: " + deploymentDate + " - " + deploymentEntry.getSystemName());
 
         SystemDeployment systemDeployment = new SystemDeployment();
-        systemDeployment.setLineNumber(csvDeploymentEntry.getLineNumber());
-        systemDeployment.setSponsor(csvDeploymentEntry.getSponsor());
-        systemDeployment.setStatus(csvDeploymentEntry.getStatus());
-        systemDeployment.setStagingStatus(csvDeploymentEntry.getStagingStatus());
-        systemDeployment.setSystemName(csvDeploymentEntry.getSystemName());
-        systemDeployment.setProjectInitiative(csvDeploymentEntry.getProjectInitiative());
-        systemDeployment.setDeploymentInstructions(csvDeploymentEntry.getDeploymentInstructions());
-        systemDeployment.setDependencies(csvDeploymentEntry.getDependencies());
-        systemDeployment.setReleaseNotes(csvDeploymentEntry.getReleaseNotes());
-        systemDeployment.setContactPerson(csvDeploymentEntry.getContactPerson());
-        systemDeployment.setPeerReviewer(csvDeploymentEntry.getPeerReviewer());
-        systemDeployment.setActualSTGDeploymentDurationMinutes(csvDeploymentEntry.getActualSTGDeploymentDurationMinutes());
-        systemDeployment.setProjectedDurationMinutes(csvDeploymentEntry.getProjectedDurationMinutes());
-        systemDeployment.setActualProdDeploymentDurationMinutes(csvDeploymentEntry.getActualProdDeploymentDurationMinutes());
-        systemDeployment.setCanBeDoneDuringTheDay(csvDeploymentEntry.getCanBeDoneDuringTheDay());
-        systemDeployment.setDeploymentApplicationDate(csvDeploymentEntry.getDeploymentApplicationDate());
-        systemDeployment.setDeploymentAutomation(csvDeploymentEntry.getDeploymentAutomation());
-        systemDeployment.setDevPostDeploymentTasks(csvDeploymentEntry.getDevPostDeploymentTasks());
+        systemDeployment.setLineNumber(deploymentEntry.getLineNumber());
+        systemDeployment.setSponsor(deploymentEntry.getSponsor());
+        systemDeployment.setStatus(deploymentEntry.getStatus());
+        systemDeployment.setStagingStatus(deploymentEntry.getStagingStatus());
+        systemDeployment.setSystemName(deploymentEntry.getSystemName());
+        systemDeployment.setProjectInitiative(deploymentEntry.getProjectInitiative());
+        systemDeployment.setDeploymentInstructions(deploymentEntry.getDeploymentInstructions());
+        systemDeployment.setDependencies(deploymentEntry.getDependencies());
+        systemDeployment.setReleaseNotes(deploymentEntry.getReleaseNotes());
+        systemDeployment.setContactPerson(deploymentEntry.getContactPerson());
+        systemDeployment.setPeerReviewer(deploymentEntry.getPeerReviewer());
+        systemDeployment.setActualSTGDeploymentDurationMinutes(deploymentEntry.getActualSTGDeploymentDurationMinutes());
+        systemDeployment.setProjectedDurationMinutes(deploymentEntry.getProjectedDurationMinutes());
+        systemDeployment.setActualProdDeploymentDurationMinutes(deploymentEntry.getActualProdDeploymentDurationMinutes());
+        systemDeployment.setCanBeDoneDuringTheDay(deploymentEntry.getCanBeDoneDuringTheDay());
+        systemDeployment.setDeploymentApplicationDate(deploymentEntry.getDeploymentApplicationDate());
+        systemDeployment.setDeploymentAutomation(deploymentEntry.getDeploymentAutomation());
+        systemDeployment.setDevPostDeploymentTasks(deploymentEntry.getDevPostDeploymentTasks());
         systemDeployment.setDeploymentDate(deploymentDate);
 
         systemDeploymentService.insertRecord(systemDeployment);
@@ -161,27 +161,6 @@ public class FolderScanScheduler {
         }
 
         return parsedDate;
-    }
-
-    private List<CSVDeploymentEntry> getDeploymentEntries(OSFile osFile) {
-
-        List<CSVDeploymentEntry> entries = null;
-        try (
-                Reader reader = new BufferedReader(new FileReader(osFile.getFullPath()));
-        ) {
-            CsvToBean<CSVDeploymentEntry> csvToBean = new CsvToBeanBuilder(reader)
-                    .withType(CSVDeploymentEntry.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .build();
-
-            entries = csvToBean.parse();
-        } catch (FileNotFoundException e) {
-            log.error("FileNotFoundException envountered: " + e.getMessage());
-        } catch (IOException e) {
-            log.error("IOException envountered: " + e.getMessage());
-        }
-
-        return entries;
     }
 
     private Set<Path> getFilePaths(String dir, int depth, String fileNameRegex, String fileType) throws IOException {

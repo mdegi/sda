@@ -1,12 +1,21 @@
 package com.md.sda.model;
 
+import com.md.sda.objects.OSFile;
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
+
+import java.io.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class CSVDeploymentEntry {
+@Component
+public class CSVDeploymentEntry implements DeploymentEntry {
 
     @CsvBindByName(column = "#")
     private int lineNumber;
@@ -61,5 +70,25 @@ public class CSVDeploymentEntry {
 
     @CsvBindByName (column = "Dev post-deployment Jira tasks (see here)")
     private String devPostDeploymentTasks;
+
+    public List<DeploymentEntry> getDeploymentEntries(OSFile osFile) {
+        try {
+            List<CSVDeploymentEntry> entries;
+            Reader reader = new BufferedReader(new FileReader(osFile.getFullPath()));
+            CsvToBean<CSVDeploymentEntry> csvToBean = new CsvToBeanBuilder(reader)
+                    .withType(CSVDeploymentEntry.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+            entries = csvToBean.parse();
+
+            return entries.stream()
+                    .map(csvEntry -> (DeploymentEntry)csvEntry)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+    }
+
 
 }

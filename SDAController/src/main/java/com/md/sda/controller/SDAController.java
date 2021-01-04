@@ -1,6 +1,7 @@
 package com.md.sda.controller;
 
 import com.md.sda.config.AppConfig;
+import com.md.sda.model.DeploymentEntry;
 import com.md.sda.model.SystemDeployment;
 import com.md.sda.schedulingTasks.FolderScanScheduler;
 import com.md.sda.service.SystemDeploymentService;
@@ -27,11 +28,12 @@ import static com.md.sda.config.ControllerConstants.*;
 public class SDAController implements CommandLineRunner {
 
     private MongoTemplate mongoTemplate;
+    private DeploymentEntry deploymentEntry;
 
     private final AppConfig appConfig;
     private final SystemDeploymentService systemDeploymentService;
 
-    private SDAControllerHelper sdaControllerHelper;
+    private final SDAControllerHelper sdaControllerHelper;
 
     public SDAController(AppConfig appConfig, SystemDeploymentService systemDeploymentService) {
         this.appConfig = appConfig;
@@ -109,7 +111,7 @@ public class SDAController implements CommandLineRunner {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.POST)
     public ResponseEntity<?> reloadFiles() {
-        FolderScanScheduler scheduler = new FolderScanScheduler(appConfig, systemDeploymentService, mongoTemplate);
+        FolderScanScheduler scheduler = new FolderScanScheduler(appConfig, systemDeploymentService, mongoTemplate, deploymentEntry);
         scheduler.processFileChangesIfAnyREST();
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -120,6 +122,5 @@ public class SDAController implements CommandLineRunner {
             systemDeploymentService.setMongoTemplate(mongoTemplate);
         }
     }
-
 
 }

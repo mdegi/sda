@@ -33,11 +33,14 @@ public class SDAController implements CommandLineRunner {
     private final AppConfig appConfig;
     private final SystemDeploymentService systemDeploymentService;
 
+    private FolderScanScheduler scheduler;
+
     private final SDAControllerHelper sdaControllerHelper;
 
-    public SDAController(AppConfig appConfig, SystemDeploymentService systemDeploymentService) {
+    public SDAController(AppConfig appConfig, SystemDeploymentService systemDeploymentService, FolderScanScheduler scheduler) {
         this.appConfig = appConfig;
         this.systemDeploymentService = systemDeploymentService;
+        this.scheduler = scheduler;
 
         sdaControllerHelper = new SDAControllerHelper();
     }
@@ -91,8 +94,8 @@ public class SDAController implements CommandLineRunner {
     @RequestMapping(value = SERVICE_SYSTEMS_DEPLOYMENT_WITHIN_DATE_RANGE,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
-    public ResponseEntity<?> getAllSystemDeploymentsWithinDateTimeRange(@PathVariable(PATH_VAR_DATE_FROM) @Pattern(regexp = MAPPING_DATE_REGEX) String dateFrom,
-                                                                        @PathVariable(PATH_VAR_DATE_TO) @Pattern(regexp = MAPPING_DATE_REGEX) String dateTo) {
+    public ResponseEntity<?> getAllSystemDeploymentsWithinDateRange(@PathVariable(PATH_VAR_DATE_FROM) @Pattern(regexp = MAPPING_DATE_REGEX) String dateFrom,
+                                                                    @PathVariable(PATH_VAR_DATE_TO) @Pattern(regexp = MAPPING_DATE_REGEX) String dateTo) {
             return new ResponseEntity<>(systemDeploymentService.getDeploymentsByDateRange(sdaControllerHelper.getDate(dateFrom), sdaControllerHelper.getDate(dateTo)), HttpStatus.OK);
     }
 
@@ -111,7 +114,6 @@ public class SDAController implements CommandLineRunner {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.POST)
     public ResponseEntity<?> reloadFiles() {
-        FolderScanScheduler scheduler = new FolderScanScheduler(appConfig, systemDeploymentService, mongoTemplate, deploymentEntry);
         scheduler.processFileChangesIfAnyREST();
         return new ResponseEntity<>(HttpStatus.OK);
     }

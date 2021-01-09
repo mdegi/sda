@@ -21,7 +21,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic();
         http.csrf().disable().authorizeRequests()
                 .antMatchers(ControllerConstants.SERVICE_RELOAD_FILES).permitAll()
-                .antMatchers(ControllerConstants.URL_VERSION + ControllerConstants.API_URL_NAME + "/**")
+                .antMatchers(ControllerConstants.URL_VERSION + ControllerConstants.API_URL_PREFIX + "/**")
                 .authenticated();
     }
 

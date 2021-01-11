@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.md.sda.config.AppConfigConstants.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -41,13 +42,13 @@ public class SDAControllerTests {
 
     @Test
     public void getConfigVarsMapping_validResponse() {
-        when(appConfig.getFileSystemPath()).thenReturn("/tmp");
-        when(appConfig.getFilenameRegex()).thenReturn("^20[0-9]{2}((0(1|3|5|7|8)|10|12)(((0|1|2)[1-9])|3[0-1])|(0(4|6|9)|11)(((0|1|2)[1-9])|30)|02((0[1-9])|((1|2)[0-9])))-export");
-        when(appConfig.getFileExtension()).thenReturn("csv");
-        when(appConfig.getFileScanFixedRateMilliSeconds()).thenReturn(4000);
-        when(appConfig.getFileScanInitialDelayMilliSeconds()).thenReturn(1000);
-        when(appConfig.getDbURL()).thenReturn("mongodb://localhost:27017");
-        when(appConfig.getDbName()).thenReturn("sda");
+        when(appConfig.getFileSystemPath()).thenReturn(FILE_SYSTEM_PATH);
+        when(appConfig.getFilenameRegex()).thenReturn(FILE_NAME_REGEX);
+        when(appConfig.getFileExtension()).thenReturn(FILE_EXTENSION);
+        when(appConfig.getFileScanFixedRateMilliSeconds()).thenReturn(FILE_SCAN_FIXED_RATE_MILLISECONDS);
+        when(appConfig.getFileScanInitialDelayMilliSeconds()).thenReturn(FILE_SCAN_INITIAL_DELAY_MILLISECONDS);
+        when(appConfig.getDbURL()).thenReturn(DB_URL);
+        when(appConfig.getDbName()).thenReturn(DB_NAME);
 
         String response = controller.getConfigVarsMapping();
         assertTrue(response.startsWith("<html>") && response.endsWith("</html>"));

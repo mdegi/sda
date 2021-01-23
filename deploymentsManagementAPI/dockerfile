@@ -1,0 +1,9 @@
+FROM amazoncorretto:11.0.4
+VOLUME /tmp
+
+RUN mkdir /depExports
+
+ARG JAR_FILE
+COPY ${JAR_FILE} deploymentsmanagementcontroller.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom", "-jar", "-DmongoDBURL=mongodb://host.docker.internal:27016", "/deploymentsmanagementcontroller.jar"]
+#run docker file using:  docker run -p 8080:8080 -t depmgr/deploymentsmanagementcontroller

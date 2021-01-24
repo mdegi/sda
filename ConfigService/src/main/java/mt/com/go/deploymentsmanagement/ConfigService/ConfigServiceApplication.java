@@ -1,4 +1,4 @@
-package com.md.configurationService.ConfigService;
+package mt.com.go.deploymentsmanagement.ConfigService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

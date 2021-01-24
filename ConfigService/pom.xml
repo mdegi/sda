@@ -8,8 +8,8 @@
 		<version>2.3.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.md.configurationService</groupId>
-	<artifactId>sdaconfigservice</artifactId>
+	<groupId>mt.com.go.deploymentsmanagement</groupId>
+	<artifactId>deploymentsmanagementconfigservice</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>configservice</name>
 	<description>Service offering offering cloud config access</description>
@@ -18,7 +18,7 @@
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
 		<dockerfile-maven-plugin-version>1.4.12</dockerfile-maven-plugin-version>
-		<docker.image.prefix>sda</docker.image.prefix>
+		<docker.image.prefix>depmgr</docker.image.prefix>
 	</properties>
 
 	<dependencies>

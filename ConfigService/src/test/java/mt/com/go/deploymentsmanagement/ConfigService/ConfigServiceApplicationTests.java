@@ -1,4 +1,4 @@
-package com.md.configurationService.ConfigService;
+package mt.com.go.deploymentsmanagement.ConfigService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

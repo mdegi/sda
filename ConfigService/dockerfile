@@ -1,8 +1,8 @@
 FROM amazoncorretto:11.0.4
 VOLUME /tmp
 ARG JAR_FILE
-COPY ${JAR_FILE} sdaconfigService.jar
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/sdaconfigService.jar"]
+COPY ${JAR_FILE} deploymentsmanagementconfigService.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/deploymentsmanagementconfigService.jar"]
 
 #run maven command to build docker image: mvn install dockerfile:build
-#run docker file using:  docker run -p 8182:8182 -t sda/sdaconfigservice
+#run docker file using:  docker run -p 8182:8182 -t depmgr/deploymentsmanagementconfigservice

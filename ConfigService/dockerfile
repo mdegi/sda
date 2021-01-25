@@ -5,4 +5,4 @@ COPY ${JAR_FILE} deploymentsmanagementconfigService.jar
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/deploymentsmanagementconfigService.jar"]
 
 #run maven command to build docker image: mvn install dockerfile:build
-#run docker file using:  docker run -p 8182:8182 -t depmgr/deploymentsmanagementconfigservice
+#run docker file using: docker run --name=deploymentsConfigService -d -p 8182:8182 -it depmgr/deploymentsmanagementconfigservice:latest

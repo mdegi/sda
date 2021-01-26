@@ -27,6 +27,6 @@ public class ControllerConstants {
      * Date regex format: yyyyMMdd example: 20201201
      */
     public static final String MAPPING_DATE_REGEX = "^20[0-9]{2}((0(1|3|5|7|8)|10|12)(((0|1|2)[1-9])|3[0-1])|(0(4|6|9)|11)(((0|1|2)[1-9])|30)|02((0[1-9])|((1|2)[0-9])))";
-    
+
 }
 

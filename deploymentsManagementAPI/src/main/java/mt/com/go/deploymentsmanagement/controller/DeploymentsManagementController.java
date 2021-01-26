@@ -1,7 +1,6 @@
 package mt.com.go.deploymentsmanagement.controller;
 
 import mt.com.go.deploymentsmanagement.config.AppConfig;
-import mt.com.go.deploymentsmanagement.model.DeploymentEntry;
 import mt.com.go.deploymentsmanagement.model.SystemDeployment;
 import mt.com.go.deploymentsmanagement.schedulingTasks.FolderScanScheduler;
 import mt.com.go.deploymentsmanagement.service.SystemDeploymentService;
@@ -28,7 +27,6 @@ import static mt.com.go.deploymentsmanagement.config.ControllerConstants.*;
 public class DeploymentsManagementController implements CommandLineRunner  {
 
     private MongoTemplate mongoTemplate;
-    private DeploymentEntry deploymentEntry;
 
     private final AppConfig appConfig;
     private final SystemDeploymentService systemDeploymentService;

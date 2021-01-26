@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Component("appConfig")
 public class AppConfig {
 
+    private final String DB_PROPERTY = "mongoDBURL";
+
     @Value("${fileSystemPath:defaultPath}")
     private String fileSystemPath;
 
@@ -35,11 +37,7 @@ public class AppConfig {
     private String dbURL;
 
     public MongoClient mongoClient() {
-        String connectionString = dbURL;
-        if (System.getProperty("mongoDBURL") != null) {
-            connectionString = System.getProperty("mongoDBURL");
-        }
-        return MongoClients.create(connectionString);
+        return (System.getProperty(DB_PROPERTY) != null) ? MongoClients.create(System.getProperty(DB_PROPERTY)) : MongoClients.create(dbURL);
     }
 
     public @Bean

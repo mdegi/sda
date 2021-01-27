@@ -36,6 +36,5 @@ public class ControllerAspect extends DeploymentsManagementAspect {
             LOGGER.error(df.format(new Date()) + " " + joinPoint.getSignature() + "Unknown exception occurred" + e.getMessage());
         }
     }
-
 }
 

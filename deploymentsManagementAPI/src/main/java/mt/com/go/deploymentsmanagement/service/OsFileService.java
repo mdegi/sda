@@ -48,7 +48,7 @@ public class OsFileService implements FileService {
         compareResult.getDeletedFiles().addAll(getOSFiles(lastScannedFileSet, currentFileList));
 
         Set<OSFile> existingFiles = currentFileList.stream()
-                .filter(path -> lastScannedFileSet.stream().anyMatch(lastFile -> lastFile.getFileName().equals(path.getFileName().toString())))
+                .filter(path -> lastScannedFileSet.stream().anyMatch(lastFile -> lastFile.getFileName().equals(path.getFileName())))
                 .collect(Collectors.toSet());
 
         for (OSFile existingFile: existingFiles) {

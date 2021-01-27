@@ -6,6 +6,8 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -13,6 +15,8 @@ import java.util.Date;
 @Aspect
 @Component
 public class FolderScanSchedulerAspect extends DeploymentsManagementAspect {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FolderScanSchedulerAspect.class);
 
     @Pointcut("execution(* mt.com.go.deploymentsmanagement.schedulingTasks.FolderScanScheduler.*(..))")
     private void allMethods() {}
@@ -23,14 +27,14 @@ public class FolderScanSchedulerAspect extends DeploymentsManagementAspect {
         try {
             joinPoint.proceed();
         } catch (Throwable t) {
-            System.out.println("Something Happened here ..... Pls check" + joinPoint.getSignature());
+            LOGGER.error("Error occurred executing method: " + joinPoint.getSignature() + ": " + t.getMessage());
         }
         System.out.println("----------- End method signature: "  + joinPoint.getSignature() + "      Time: " + df.format(new Date()));
     }
 
     @AfterThrowing(value = "allMethods()", throwing = "e")
     public void logException(JoinPoint joinPoint, Throwable e) {
-        System.out.println("================  Exception caught: " + joinPoint.getSignature() + " -> " + e);
+        LOGGER.error("Exception caught: " + joinPoint.getSignature() + ": " + e);
     }
 
 }

@@ -8,10 +8,10 @@ import java.util.Set;
 
 public interface FileService {
 
-    public Set<OSFile> getFiles();
+    Set<OSFile> getFiles();
 
-    public FileListDetails compareFiles(Set<OSFile> currentFileList, Set<OSFile> lastScannedFileSet);
+    FileListDetails compareFiles(Set<OSFile> currentFileList, Set<OSFile> lastScannedFileSet);
 
-    public void setAppConfig(AppConfig appConfig);
+    void setAppConfig(AppConfig appConfig);
 
 }

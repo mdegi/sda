@@ -1,7 +1,8 @@
 FROM amazoncorretto:11.0.4
 VOLUME /tmp
 
-#RUN mkdir /depExports
+RUN mkdir /config
+COPY config/security.properties /config/security.properties
 
 ARG JAR_FILE
 COPY ${JAR_FILE} deploymentsmanagementcontroller.jar

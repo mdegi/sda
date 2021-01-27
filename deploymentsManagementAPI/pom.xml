@@ -14,9 +14,6 @@
 	<name>deploymentsmanagement</name>
 	<description>Client offering rest services and reads from a cloud server DeploymentsManagementAPI</description>
 
-<!--	<properties>-->
-<!--		<java.version>11</java.version>-->
-<!--	</properties>-->
 	<properties>
 		<java.version>11</java.version>
 		<spring-cloud.version>Hoxton.SR8</spring-cloud.version>
@@ -24,17 +21,16 @@
 		<commons-io-version>2.6</commons-io-version>
 		<aspectj-version>1.9.6</aspectj-version>
 		<aspectj-weaver-version>1.9.6</aspectj-weaver-version>
-		<hibernate-validator-version>6.0.10.Final</hibernate-validator-version>
 		<open-csv-version>5.0</open-csv-version>
 		<dockerfile-maven-plugin-version>1.4.12</dockerfile-maven-plugin-version>
 		<docker-image-prefix>depmgr</docker-image-prefix>
 		<junit-version>5.6.0</junit-version>
-		<cucumber-version>5.4.1</cucumber-version>
 		<jacoco.version>0.8.6</jacoco.version>
-		<chilkat.version>9.5.0</chilkat.version>
 
 		<cxf.version>3.3.6</cxf.version>
 		<cxf.codegen.plugin>3.3.6</cxf.codegen.plugin>
+
+		<rest.common.version>3.4.0.80-RELEASE</rest.common.version>
 	</properties>
 
 	<dependencies>
@@ -56,31 +52,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-java</artifactId>
-			<version>${cucumber-version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-junit</artifactId>
-			<version>${cucumber-version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
 			<version>${open-csv-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate.validator</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>${hibernate-validator-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -131,6 +105,13 @@
 			</exclusions>
 		</dependency>
 
+		<!-- Security -->
+		<dependency>
+			<groupId>mt.com.go</groupId>
+			<artifactId>rest-integration-layer-common-auth</artifactId>
+			<version>${rest.common.version}</version>
+		</dependency>
+
 		<!-- CXF -->
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
@@ -155,17 +136,6 @@
 			<artifactId>com.springsource.javax.xml.ws</artifactId>
 			<version>2.1.1</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 	</dependencies>
 
 	<dependencyManagement>
@@ -182,7 +152,6 @@
 
 	<build>
 		<plugins>
-
 			<!-- Docker -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

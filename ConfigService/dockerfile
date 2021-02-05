@@ -1,4 +1,4 @@
-FROM amazoncorretto:11.0.4
+FROM openjdk:11.0.4-jre-slim
 VOLUME /tmp
 ARG JAR_FILE
 COPY ${JAR_FILE} deploymentsmanagementconfigService.jar

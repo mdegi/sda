@@ -27,9 +27,6 @@
 		<junit-version>5.6.0</junit-version>
 		<jacoco.version>0.8.6</jacoco.version>
 
-		<cxf.version>3.3.6</cxf.version>
-		<cxf.codegen.plugin>3.3.6</cxf.codegen.plugin>
-
 		<rest.common.version>3.4.0.80-RELEASE</rest.common.version>
 	</properties>
 
@@ -112,25 +109,6 @@
 			<version>${rest.common.version}</version>
 		</dependency>
 
-		<!-- CXF -->
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-simple</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-transports-http</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxws</artifactId>
-			<version>${cxf.version}</version>
-		</dependency>
-
 		<dependency>
 			<groupId>javax.xml.ws</groupId>
 			<artifactId>com.springsource.javax.xml.ws</artifactId>
@@ -167,59 +145,6 @@
 						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
 					</buildArgs>
 				</configuration>
-			</plugin>
-
-			<!-- CXF -->
-			<plugin>
-				<groupId>org.apache.cxf</groupId>
-				<artifactId>cxf-codegen-plugin</artifactId>
-				<version>${cxf.version}</version>
-				<executions>
-					<execution>
-						<id>generate-sources</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>wsdl2java</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.cxf</groupId>
-				<artifactId>cxf-codegen-plugin</artifactId>
-				<configuration>
-					<sourceRoot>${project.basedir}/src/main/java</sourceRoot>
-					<wsdlOptions>
-						<wsdlOption>
-							<wsdl>${project.basedir}/src/main/resources/wsdl/Lists.wsdl</wsdl>
-							<packagenames>
-								<packagename>mt.com.go.deploymentsmanagement.data.integration.sharepoint.list</packagename>
-							</packagenames>
-							<bareMethods />
-						</wsdlOption>
-					</wsdlOptions>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<!-- Configure cleansing of WS stubs. -->
-					<execution>
-						<id>clean-ws</id>
-						<phase>clean</phase>
-						<configuration>
-							<tasks>
-								<echo>Cleaning WS stubs in directory ${project.build.sourceDirectory}\mt\com\go\deploymentsmanagement\data\integration\...</echo>
-								<delete dir="${project.build.sourceDirectory}\mt\com\go\deploymentsmanagement\data\integration\" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -42,20 +42,6 @@ public class DeploymentsManagementController implements CommandLineRunner  {
         deploymentsManagementControllerHelper = new DeploymentsManagementControllerHelper();
     }
 
-    @RequestMapping(value = SERVICE_CONFIG_VARS_MAPPING,
-            method = RequestMethod.GET)
-    public String getConfigVarsMapping() {
-        return "<html>Configured Vars:" +
-                "<br/>fileSystemPath : " + appConfig.getFileSystemPath() +
-                "<br/>fileNameRegex : " + appConfig.getFilenameRegex() +
-                "<br/>fileExtension : " + appConfig.getFileExtension() +
-                "<br/>fileScanFixedRateMilliSeconds: " + appConfig.getFileScanFixedRateMilliSeconds() +
-                "<br/>fileScanInitialDelayMilliSeconds: " + appConfig.getFileScanInitialDelayMilliSeconds() +
-                "<br/>mongDBConnectDatabase: " + appConfig.getDbName() +
-                "<br/>mongoDBURL: " + appConfig.getDbURL() +
-                "</html>";
-    }
-
     @RequestMapping(value = SERVICE_SYSTEMS_DEPLOYMENTS_BY_DATE,
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)

@@ -14,7 +14,6 @@ public class ControllerConstants {
     public static final String PATH_VAR_DATE_FROM = "dateFrom";
     public static final String PATH_VAR_DATE_TO = "dateTo";
 
-    public static final String SERVICE_CONFIG_VARS_MAPPING = API_URL + "/configVars";
     public static final String SERVICE_SYSTEMS_DEPLOYMENTS_BY_DATE = API_URL + "/deploymentDate:{deploymentDate}";
     public static final String SERVICE_SYSTEMS_DEPLOYMENTS_BY_STATUS = API_URL + "/postDeploymentTaskStatus:{deploymentStatus}";
     public static final String SERVICE_SYSTEMS_DEPLOYMENT_DURATION_BY_DATE = API_URL + "/deploymentDurationByDate:{deploymentDate}";

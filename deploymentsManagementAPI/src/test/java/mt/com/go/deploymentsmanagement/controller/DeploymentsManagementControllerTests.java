@@ -47,20 +47,6 @@ public class DeploymentsManagementControllerTests {
     }
 
     @Test
-    public void getConfigVarsMapping_validResponse() {
-        when(appConfig.getFileSystemPath()).thenReturn(FILE_SYSTEM_PATH);
-        when(appConfig.getFilenameRegex()).thenReturn(FILE_NAME_REGEX);
-        when(appConfig.getFileExtension()).thenReturn(FILE_EXTENSION);
-        when(appConfig.getFileScanFixedRateMilliSeconds()).thenReturn(FILE_SCAN_FIXED_RATE_MILLISECONDS);
-        when(appConfig.getFileScanInitialDelayMilliSeconds()).thenReturn(FILE_SCAN_INITIAL_DELAY_MILLISECONDS);
-        when(appConfig.getDbURL()).thenReturn(DB_URL);
-        when(appConfig.getDbName()).thenReturn(DB_NAME);
-
-        String response = controller.getConfigVarsMapping();
-        assertTrue(response.startsWith("<html>") && response.endsWith("</html>"));
-    }
-
-    @Test
     public void getSystemsDeploymentByDate_validDate() {
         List<SystemDeployment> deploymentsByDate = new ArrayList<>();
         deploymentsByDate.add(new SystemDeployment());

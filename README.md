@@ -5,9 +5,9 @@ https://goplc-my.sharepoint.com/:f:/g/personal/martin_degiorgio_go_com_mt/Eglz2a
 
 The files are as follows:
 - 20201106-export: deployments window exported file
-- Local-SDA.postman_collection: postman requests
-- sdaconfigservice.tar: spring boot server that provides connection to cloud config and provides this service to other applications
-- sdacontroller.tar: spring boot app to processes file changes and interacts with DB
+- DeploymentsAmanagement.postman_collection: postman requests
+- deploymentsmanagementconfigservice.tar: spring boot server that provides connection to cloud config and provides this service to other applications
+- deploymentsmanagementcontroller.tar: spring boot app to processes file changes and interacts with MongoDB
 
 To run the dockerised application pls first make sure that you have a running mongodb container on port 2016.
 - pull mongoDB container
@@ -15,19 +15,21 @@ To run the dockerised application pls first make sure that you have a running mo
 - run mongoDB container on port 27016
   command: docker run -p 27016:27017 -t mongo
 
-sdaconfigservice can be loaded and run by:
-- command: docker load -i sdaconfigservice.tar
-- command: docker run -p 8182:8182 -t sda/sdaconfigservice
+deploymentsmanagementconfigservice can be loaded and run by:
+- command: docker load -i deploymentsmanagementconfigservice.tar
+- command: docker run --name=deploymentsConfigService -d -p 8182:8182 -it depmgr/deploymentsmanagementconfigservice:latest
 
-sdacontroller can be loaded by: 
+deploymentsmanagementcontroller can be loaded by: 
 - command: docker load -i sdacontroller.tar
-- command: docker run -p 8080:8080 -t sda/sdacontroller
+- command: docker run --name=deploymentsController -d -p 8080:8080 -it --mount src="<PATH TO CSV FILES>",dst=/depExports,type=bind depmgr/deploymentsmanagementcontroller:latest
+  ## <PATH TO CSV FILES> refer to folder in which file: 20201106-export.csv and any similar files are found 
+  ## examples of <PATH TO CSV FILES> might be: /c/depExports or "/c/Users/User.Name/OneDrive - GO PLC-/depExports" if the file location is in SharePoint
+  
+At this point the application should be running and accepting requests on port 8080. 
+The postman requests provided, if executed should provide a valid response. 
 
-At this point the application should be running and accepting requests on port 8080. The postman requests provided, if executed should provide a valid response although empty for most of them. This is because no CSV file has yet been provided and uploaded. When the CSV file provided is copied to the configured folder, it will be scanned and uploaded by the scheduler
-- command: docker cp 20201106-export.csv <sdaController_ContainerName>:/depExports
+If the CSV file in mounted folder is deleted, the data representing the file content is automatically deleted by the scheduler  which can be verified running the postman requests just after
+Similarly if the CSV file is amended, its contents will be reflected when executing the postman requests
+Also, other files can also be added to the folder and will be automatically uploaded and reflected in the postman requests
 
-After the copy command has been executed, the file should be uploaded automatically to the DB and postman requests should now produce a different valid response with details read from the DB
-
-Alternatively if the CSV file on the container is deleted, the data representing the file content is automatically deleted by the scheduler and this can be checked by executing the below docker command and running the postman requests just after
-- command: docker exec -it <sdaController_ContainerName> rm /depExports/20201106-export.csv
-
+N.B: CSV file names should be in the format YYYYmmDD-export.csv

@@ -1,9 +1,6 @@
-"# sda" 
+"# deploymentsManagement" 
 
-Files related to the application can be found at:
-https://goplc-my.sharepoint.com/:f:/g/personal/martin_degiorgio_go_com_mt/Eglz2aprNZtMr2A-uDhpV6wBkT2-RsvOuIQUg8GTljtArQ?e=0BKehY
-
-The files are as follows:
+The files need to run the application are as follows:
 - 20201106-export: deployments window exported file
 - DeploymentsAmanagement.postman_collection: postman requests
 - deploymentsmanagementconfigservice.tar: spring boot server that provides connection to cloud config and provides this service to other applications

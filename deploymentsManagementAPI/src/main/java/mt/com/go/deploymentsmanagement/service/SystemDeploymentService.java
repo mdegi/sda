@@ -1,6 +1,6 @@
 package mt.com.go.deploymentsmanagement.service;
 
-import mt.com.go.deploymentsmanagement.model.SystemDeployment;
+import mt.com.go.deploymentsmanagement.dao.SystemDeploymentDAO;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -26,8 +26,8 @@ public class SystemDeploymentService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public void insertRecord(SystemDeployment systemDeployment) {
-        mongoTemplate.insert(systemDeployment);
+    public void insertRecord(SystemDeploymentDAO systemDeploymentDAO) {
+        mongoTemplate.insert(systemDeploymentDAO);
     }
 
     public void deleteRecords(Date deploymentDate) {
@@ -36,25 +36,25 @@ public class SystemDeploymentService {
         mongoTemplate.getCollection(COLLECTION_SYSTEM_DEPLOYMENT).deleteMany(filter);
     }
 
-    public List<SystemDeployment> getDeploymentsByDate(Date deploymentDate) {
+    public List<SystemDeploymentDAO> getDeploymentsByDate(Date deploymentDate) {
         Query deploymentsByDateQuery = query(where("deploymentDate").is(deploymentDate));
-        return mongoTemplate.find(deploymentsByDateQuery, SystemDeployment.class);
+        return mongoTemplate.find(deploymentsByDateQuery, SystemDeploymentDAO.class);
     }
 
-    public List<SystemDeployment> getDeploymentsBySystem(String systemName) {
+    public List<SystemDeploymentDAO> getDeploymentsBySystem(String systemName) {
         Query deploymentsBySystemQuery = query(where("systemName").is(systemName));
-        return mongoTemplate.find(deploymentsBySystemQuery, SystemDeployment.class);
+        return mongoTemplate.find(deploymentsBySystemQuery, SystemDeploymentDAO.class);
     }
 
-    public List<SystemDeployment> getDeploymentsWithPostDeploymentStatus(String status) {
+    public List<SystemDeploymentDAO> getDeploymentsWithPostDeploymentStatus(String status) {
         final String DEV_STATUS_TASKS_REGEX = ".*" + status + "";
         Query systemsWithUnCompletedDevTasksQuery = query(where("devPostDeploymentTasks").regex(DEV_STATUS_TASKS_REGEX));
-        return mongoTemplate.find(systemsWithUnCompletedDevTasksQuery, SystemDeployment.class);
+        return mongoTemplate.find(systemsWithUnCompletedDevTasksQuery, SystemDeploymentDAO.class);
     }
 
-    public List<SystemDeployment> getDeploymentsByDateRange(Date dateFrom, Date dateTo) {
+    public List<SystemDeploymentDAO> getDeploymentsByDateRange(Date dateFrom, Date dateTo) {
         Query systemsByDateRangeQuery = query(where("deploymentDate").gte(dateFrom).lte(dateTo));
-        return mongoTemplate.find(systemsByDateRangeQuery, SystemDeployment.class);
+        return mongoTemplate.find(systemsByDateRangeQuery, SystemDeploymentDAO.class);
     }
 
 }

@@ -26,11 +26,18 @@
 		<docker-image-prefix>depmgr</docker-image-prefix>
 		<junit-version>5.6.0</junit-version>
 		<jacoco.version>0.8.6</jacoco.version>
+		<deployment-management-client-version>1.0.0-SNAPSHOT</deployment-management-client-version>
 
 		<rest.common.version>3.4.0.80-RELEASE</rest.common.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>mt.com.go</groupId>
+			<artifactId>deployment-management-client</artifactId>
+			<version>${deployment-management-client-version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>

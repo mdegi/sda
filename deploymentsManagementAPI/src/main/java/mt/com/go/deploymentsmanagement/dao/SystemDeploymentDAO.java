@@ -1,4 +1,4 @@
-package mt.com.go.deploymentsmanagement.model;
+package mt.com.go.deploymentsmanagement.dao;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SystemDeployment {
+public class SystemDeploymentDAO {
 
     @Id
     public String id;

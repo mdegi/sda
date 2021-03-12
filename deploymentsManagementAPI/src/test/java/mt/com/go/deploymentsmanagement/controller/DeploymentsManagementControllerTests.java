@@ -1,28 +1,23 @@
 package mt.com.go.deploymentsmanagement.controller;
 
-import mt.com.go.deploymentsmanagement.config.AppConfig;
-import mt.com.go.deploymentsmanagement.model.SystemDeployment;
+import mt.com.go.deploymentmanagement.models.SystemDeployment;
+import mt.com.go.deploymentsmanagement.dao.SystemDeploymentDAO;
 import mt.com.go.deploymentsmanagement.schedulingTasks.FolderScanScheduler;
-import mt.com.go.deploymentsmanagement.service.SystemDeploymentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-
-import static mt.com.go.deploymentsmanagement.config.AppConfigConstants.* ;
 
 public class DeploymentsManagementControllerTests {
 
@@ -30,14 +25,7 @@ public class DeploymentsManagementControllerTests {
     FolderScanScheduler scheduler;
 
     @Mock
-    AppConfig appConfig;
-
-    @Mock
-    SystemDeploymentService systemDeploymentService;
-
-    @Mock
-    DeploymentsManagementControllerHelper controllerHelper;
-
+    RequestProcessor requestProcessor;
     @InjectMocks
     DeploymentsManagementController controller;
 
@@ -51,17 +39,15 @@ public class DeploymentsManagementControllerTests {
         List<SystemDeployment> deploymentsByDate = new ArrayList<>();
         deploymentsByDate.add(new SystemDeployment());
 
-        when(controllerHelper.getDate(anyString())).thenReturn(new Date());
-        when(systemDeploymentService.getDeploymentsByDate(any())).thenReturn(deploymentsByDate);
+        ResponseEntity responseEntity = new ResponseEntity<>(deploymentsByDate, HttpStatus.OK);
+        when(requestProcessor.getDeploymentTotalDurationToDeployByDate(anyString())).thenReturn(responseEntity);
+
         controller.getSystemsDeploymentByDate("20210111");
         assertFalse(deploymentsByDate.isEmpty());
     }
 
     @Test
     public void getSystemsDeploymentByDate_inValidDate() {
-        when(controllerHelper.getDate(anyString())).thenReturn(null);
-        when(systemDeploymentService.getDeploymentsByDate(null)).thenReturn(null);
-
         controller.getSystemsDeploymentByDate("1234");
         assert(true);
     }
@@ -69,11 +55,11 @@ public class DeploymentsManagementControllerTests {
     @Test
     public void getDeploymentTotalDurationToDeployByDate_entriesFound() {
         String deploymentDate = "20210111";
-        List<SystemDeployment> deploymentList = new ArrayList<>();
-        deploymentList.add(new SystemDeployment());
+        List<SystemDeploymentDAO> deploymentList = new ArrayList<>();
+        deploymentList.add(new SystemDeploymentDAO());
 
-        when(controllerHelper.getDate(anyString())).thenReturn(new Date());
-        when(systemDeploymentService.getDeploymentsByDate(any())).thenReturn(deploymentList);
+        ResponseEntity responseEntity = new ResponseEntity<>(deploymentList, HttpStatus.OK);
+        when(requestProcessor.getDeploymentTotalDurationToDeployByDate(anyString())).thenReturn(responseEntity);
 
         assertEquals(controller.getDeploymentTotalDurationToDeployByDate(deploymentDate).getStatusCode(), HttpStatus.OK);
     }
@@ -81,29 +67,38 @@ public class DeploymentsManagementControllerTests {
     @Test
     public void getDeploymentTotalDurationToDeployByDate_noEntries() {
         String deploymentDate = "20210112";
-        List<SystemDeployment> deploymentList = new ArrayList<>();
-        when(systemDeploymentService.getDeploymentsByDate(controllerHelper.getDate(deploymentDate))).thenReturn(deploymentList);
+        List<SystemDeploymentDAO> deploymentList = new ArrayList<>();
 
+        ResponseEntity responseEntity = new ResponseEntity<>(deploymentList, HttpStatus.OK);
+        when(requestProcessor.getDeploymentTotalDurationToDeployByDate(anyString())).thenReturn(responseEntity);
         assertEquals(controller.getDeploymentTotalDurationToDeployByDate(deploymentDate).getStatusCode(), HttpStatus.OK);
     }
 
     @Test
     public void getSystemsDeploymentByPostDeploymentStatus_validStatus() {
+        ResponseEntity responseEntity = new ResponseEntity<>(null, HttpStatus.OK);
+        when(requestProcessor.getSystemsDeploymentByPostDeploymentStatus(anyString())).thenReturn(responseEntity);
         assertEquals(controller.getSystemsDeploymentByPostDeploymentStatus("OPEN").getStatusCode(),HttpStatus.OK);
     }
 
     @Test
     public void getSystemsDeploymentByPostDeploymentStatus_inValidStatus() {
+        ResponseEntity responseEntity = new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        when(requestProcessor.getSystemsDeploymentByPostDeploymentStatus(anyString())).thenReturn(responseEntity);
         assertEquals(controller.getSystemsDeploymentByPostDeploymentStatus("").getStatusCode(),HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void getAllDeploymentsBySystem_validSystem() {
+        ResponseEntity responseEntity = new ResponseEntity<>(null, HttpStatus.OK);
+        when(requestProcessor.getAllDeploymentsBySystem(anyString())).thenReturn(responseEntity);
         assertEquals(controller.getAllDeploymentsBySystem("CPS").getStatusCode(),HttpStatus.OK);
     }
 
     @Test
     public void getAllDeploymentsBySystem_inValidSystem() {
+        ResponseEntity responseEntity = new ResponseEntity<>("", HttpStatus.BAD_REQUEST);
+        when(requestProcessor.getAllDeploymentsBySystem(anyString())).thenReturn(responseEntity);
         assertEquals(controller.getAllDeploymentsBySystem("").getStatusCode(),HttpStatus.BAD_REQUEST);
     }
 
@@ -118,11 +113,13 @@ public class DeploymentsManagementControllerTests {
         String dateTo = "20210111";
         String dateFrom = "20210111";
 
-        List<SystemDeployment> deploymentList = new ArrayList<>();
-        deploymentList.add(new SystemDeployment());
+        List<SystemDeploymentDAO> deploymentList = new ArrayList<>();
+        deploymentList.add(new SystemDeploymentDAO());
 
-        when(controllerHelper.getDate(anyString())).thenReturn(new Date());
-        when(systemDeploymentService.getDeploymentsByDateRange(controllerHelper.getDate(dateFrom), controllerHelper.getDate(dateTo))).thenReturn(deploymentList);
+        ResponseEntity responseEntity = new ResponseEntity<>(deploymentList, HttpStatus.OK);
+        when(requestProcessor.getAllSystemDeploymentsWithinDateRange(anyString(), anyString())).thenReturn(responseEntity);
+
+        when(requestProcessor.getAllSystemDeploymentsWithinDateRange(anyString(), anyString())).thenReturn(responseEntity);
         assertEquals(controller.getAllSystemDeploymentsWithinDateRange(dateFrom, dateTo).getStatusCode(), HttpStatus.OK);
     }
 

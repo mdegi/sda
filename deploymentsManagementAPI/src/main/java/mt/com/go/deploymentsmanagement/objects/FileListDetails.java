@@ -25,4 +25,8 @@ public class FileListDetails implements Serializable {
         return (!newFiles.isEmpty() || !changedFiles.isEmpty() || !deletedFiles.isEmpty());
     }
 
+    public String getFileNames(Set<OSFile> fileSet) {
+        return String.join(",", fileSet.stream().map(OSFile::getFileName).toArray(String[]::new));
+    }
+
 }

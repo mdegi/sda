@@ -1,11 +1,13 @@
 package mt.com.go.deploymentsmanagement.schedulingTasks;
 
 import mt.com.go.deploymentsmanagement.config.AppConfig;
+import mt.com.go.deploymentsmanagement.config.QueueConfig;
 import mt.com.go.deploymentsmanagement.model.DeploymentEntry;
 import mt.com.go.deploymentsmanagement.dao.SystemDeploymentDAO;
 import mt.com.go.deploymentsmanagement.objects.FileListDetails;
 import mt.com.go.deploymentsmanagement.objects.OSFile;
 import mt.com.go.deploymentsmanagement.service.FileService;
+import mt.com.go.deploymentsmanagement.service.RabbitMQPublisher;
 import mt.com.go.deploymentsmanagement.service.SystemDeploymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,22 +38,27 @@ public class FolderScanScheduler {
     private Set<OSFile> lastScannedFileSet;
     private final SystemDeploymentService systemDeploymentService;
     private final FileService fileService;
+    private final RabbitMQPublisher rabbitMQPublisher;
 
     private final DeploymentEntry deploymentEntry;
 
-    public FolderScanScheduler(AppConfig appConfig, SystemDeploymentService systemDeploymentService,
-                               MongoTemplate mongoTemplate, DeploymentEntry deploymentEntry, FileService fileService) {
+    public FolderScanScheduler(AppConfig appConfig, QueueConfig queueConfig, SystemDeploymentService systemDeploymentService,
+                               MongoTemplate mongoTemplate, DeploymentEntry deploymentEntry, FileService fileService, RabbitMQPublisher rabbitMQPublisher) {
         this.systemDeploymentService = systemDeploymentService;
         if (systemDeploymentService.getMongoTemplate() == null) {
             systemDeploymentService.setMongoTemplate(mongoTemplate);
         }
         this.mongoTemplate = mongoTemplate;
         this.deploymentEntry = deploymentEntry;
-        this.fileService = fileService;
+
         fileService.setAppConfig(appConfig);
+        this.fileService = fileService;
+
+        rabbitMQPublisher.setQueueConfig(queueConfig);
+        this.rabbitMQPublisher = rabbitMQPublisher;
     }
 
-    //a scheduled method should have the void return type
+    //a scheduler method should have the void return type
     //such method should not accept any parameters
     //options are fixedRate / fixedDelay and cron
     @Scheduled(fixedDelayString = "${fileScanFixedRateMilliSeconds}", initialDelayString = "${fileScanInitialDelayMilliSeconds}")
@@ -95,13 +102,16 @@ public class FolderScanScheduler {
                 //delete any saved documents with the new file name in cases these exist
                 comparedFiles.getNewFiles().forEach(newFile -> deleteEntries(getDeploymentDateFromFileName(newFile.getFileName())));
                 comparedFiles.getNewFiles().forEach(newFile -> deploymentEntry.getDeploymentEntries(newFile).forEach(dpEntry -> saveEntry(dpEntry, getDeploymentDateFromFileName(newFile.getFileName()))));
+                rabbitMQPublisher.sendMessage("New Files have been added: " + comparedFiles.getFileNames(comparedFiles.getNewFiles()));
             }
             if (!comparedFiles.getDeletedFiles().isEmpty()) {
                 comparedFiles.getDeletedFiles().forEach(deletedFile -> deleteEntries(getDeploymentDateFromFileName(deletedFile.getFileName())));
+                rabbitMQPublisher.sendMessage("Files have been deleted: " + comparedFiles.getFileNames(comparedFiles.getDeletedFiles()));
             }
             if (!comparedFiles.getChangedFiles().isEmpty()) {
                 comparedFiles.getChangedFiles().forEach(changedFile -> deleteEntries(getDeploymentDateFromFileName(changedFile.getFileName())));
                 comparedFiles.getChangedFiles().forEach(changedFile -> deploymentEntry.getDeploymentEntries(changedFile).forEach(dpEntry -> saveEntry(dpEntry, getDeploymentDateFromFileName(changedFile.getFileName()))));
+                rabbitMQPublisher.sendMessage("Files have been changed: " + comparedFiles.getFileNames(comparedFiles.getChangedFiles()));
             }
         }
     }

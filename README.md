@@ -13,7 +13,7 @@ To run the dockerised application pls first make sure that you have a running mo
 - run mongoDB container on port 27016
   <br/>command: docker run --name=deploymentsMongo -d -it -p 27016:27017 -t mongo
 
-You also have installed a RabbitMQ instance for this version of the application
+You also need to have installed a RabbitMQ instance for this version of the application
 - pull and run a RabbitMQ instance on docker as follows:
   command: docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
 

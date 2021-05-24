@@ -70,6 +70,7 @@ public class RequestProcessor {
     }
 
     private SystemDeployment convertSystemDeployment(SystemDeploymentDAO systemDeploymentDAO) {
+        LOGGER.info("Converting entity object to systemDeployment object : " + systemDeploymentDAO.getDeploymentDate() + " - " + systemDeploymentDAO.getSystemName());
         mt.com.go.deploymentmanagement.models.SystemDeployment systemDeployment = new mt.com.go.deploymentmanagement.models.SystemDeployment();
         systemDeployment.setId(systemDeploymentDAO.getId());
         systemDeployment.setLineNumber(systemDeploymentDAO.getLineNumber());

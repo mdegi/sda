@@ -22,6 +22,8 @@ public class SystemDeploymentService {
         return mongoTemplate;
     }
 
+    private final String COLLECTION_SYSTEM_DEPLOYMENT = "systemDeploymentDAO";
+
     public void setMongoTemplate(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
@@ -30,9 +32,12 @@ public class SystemDeploymentService {
         mongoTemplate.insert(systemDeploymentDAO);
     }
 
+    public void deleteAllRecords() {
+        mongoTemplate.dropCollection(COLLECTION_SYSTEM_DEPLOYMENT);
+    }
+
     public void deleteRecords(Date deploymentDate) {
         Bson filter = new Document("deploymentDate", deploymentDate);
-        String COLLECTION_SYSTEM_DEPLOYMENT = "systemDeployment";
         mongoTemplate.getCollection(COLLECTION_SYSTEM_DEPLOYMENT).deleteMany(filter);
     }
 

@@ -87,8 +87,8 @@ public class OsFileService implements FileService {
                 path.getFileName().toString(),
                 FilenameUtils.getExtension((path.getFileName().toString())),
                 path.toAbsolutePath().toString(),
-                modifiedTime,
-                createdTime
+                createdTime,
+                modifiedTime
         );
     }
 

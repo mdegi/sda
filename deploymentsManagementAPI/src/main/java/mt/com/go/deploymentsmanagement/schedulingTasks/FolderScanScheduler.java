@@ -49,6 +49,7 @@ public class FolderScanScheduler {
         this.deploymentEntry = deploymentEntry;
         this.fileService = fileService;
         fileService.setAppConfig(appConfig);
+        systemDeploymentService.deleteAllRecords();
     }
 
     //a scheduled method should have the void return type
@@ -112,7 +113,6 @@ public class FolderScanScheduler {
 
     private void deleteEntries(Date deploymentDate) {
         log.info("Deleting DB Entries: " + deploymentDate);
-
         systemDeploymentService.deleteRecords(deploymentDate);
     }
 

@@ -1,9 +1,8 @@
 package mt.com.go.deploymentsmanagement.schedulingTasks;
 
 import mt.com.go.deploymentsmanagement.config.AppConfig;
-import mt.com.go.deploymentsmanagement.controller.RequestProcessor;
 import mt.com.go.deploymentsmanagement.model.DeploymentEntry;
-import mt.com.go.deploymentsmanagement.dao.SystemDeploymentDAO;
+import mt.com.go.deploymentsmanagement.dao.SystemDeploymentRepo;
 import mt.com.go.deploymentsmanagement.objects.FileListDetails;
 import mt.com.go.deploymentsmanagement.objects.OSFile;
 import mt.com.go.deploymentsmanagement.service.FileService;
@@ -121,28 +120,28 @@ public class FolderScanScheduler {
     private void saveEntry(DeploymentEntry deploymentEntry, Date deploymentDate) {
         LOGGER.info("Saving Deployment Entry: " + deploymentDate + " - " + deploymentEntry.getSystemName());
 
-        SystemDeploymentDAO systemDeploymentDAO = new SystemDeploymentDAO();
-        systemDeploymentDAO.setLineNumber(deploymentEntry.getLineNumber());
-        systemDeploymentDAO.setSponsor(deploymentEntry.getSponsor());
-        systemDeploymentDAO.setStatus(deploymentEntry.getStatus());
-        systemDeploymentDAO.setStagingStatus(deploymentEntry.getStagingStatus());
-        systemDeploymentDAO.setSystemName(deploymentEntry.getSystemName());
-        systemDeploymentDAO.setProjectInitiative(deploymentEntry.getProjectInitiative());
-        systemDeploymentDAO.setDeploymentInstructions(deploymentEntry.getDeploymentInstructions());
-        systemDeploymentDAO.setDependencies(deploymentEntry.getDependencies());
-        systemDeploymentDAO.setReleaseNotes(deploymentEntry.getReleaseNotes());
-        systemDeploymentDAO.setContactPerson(deploymentEntry.getContactPerson());
-        systemDeploymentDAO.setPeerReviewer(deploymentEntry.getPeerReviewer());
-        systemDeploymentDAO.setActualSTGDeploymentDurationMinutes(deploymentEntry.getActualSTGDeploymentDurationMinutes());
-        systemDeploymentDAO.setProjectedDurationMinutes(deploymentEntry.getProjectedDurationMinutes());
-        systemDeploymentDAO.setActualProdDeploymentDurationMinutes(deploymentEntry.getActualProdDeploymentDurationMinutes());
-        systemDeploymentDAO.setCanBeDoneDuringTheDay(deploymentEntry.getCanBeDoneDuringTheDay());
-        systemDeploymentDAO.setDeploymentApplicationDate(deploymentEntry.getDeploymentApplicationDate());
-        systemDeploymentDAO.setDeploymentAutomation(deploymentEntry.getDeploymentAutomation());
-        systemDeploymentDAO.setDevPostDeploymentTasks(deploymentEntry.getDevPostDeploymentTasks());
-        systemDeploymentDAO.setDeploymentDate(deploymentDate);
+        SystemDeploymentRepo systemDeploymentRepo = new SystemDeploymentRepo();
+        systemDeploymentRepo.setLineNumber(deploymentEntry.getLineNumber());
+        systemDeploymentRepo.setSponsor(deploymentEntry.getSponsor());
+        systemDeploymentRepo.setStatus(deploymentEntry.getStatus());
+        systemDeploymentRepo.setStagingStatus(deploymentEntry.getStagingStatus());
+        systemDeploymentRepo.setSystemName(deploymentEntry.getSystemName());
+        systemDeploymentRepo.setProjectInitiative(deploymentEntry.getProjectInitiative());
+        systemDeploymentRepo.setDeploymentInstructions(deploymentEntry.getDeploymentInstructions());
+        systemDeploymentRepo.setDependencies(deploymentEntry.getDependencies());
+        systemDeploymentRepo.setReleaseNotes(deploymentEntry.getReleaseNotes());
+        systemDeploymentRepo.setContactPerson(deploymentEntry.getContactPerson());
+        systemDeploymentRepo.setPeerReviewer(deploymentEntry.getPeerReviewer());
+        systemDeploymentRepo.setActualSTGDeploymentDurationMinutes(deploymentEntry.getActualSTGDeploymentDurationMinutes());
+        systemDeploymentRepo.setProjectedDurationMinutes(deploymentEntry.getProjectedDurationMinutes());
+        systemDeploymentRepo.setActualProdDeploymentDurationMinutes(deploymentEntry.getActualProdDeploymentDurationMinutes());
+        systemDeploymentRepo.setCanBeDoneDuringTheDay(deploymentEntry.getCanBeDoneDuringTheDay());
+        systemDeploymentRepo.setDeploymentApplicationDate(deploymentEntry.getDeploymentApplicationDate());
+        systemDeploymentRepo.setDeploymentAutomation(deploymentEntry.getDeploymentAutomation());
+        systemDeploymentRepo.setDevPostDeploymentTasks(deploymentEntry.getDevPostDeploymentTasks());
+        systemDeploymentRepo.setDeploymentDate(deploymentDate);
 
-        systemDeploymentService.insertRecord(systemDeploymentDAO);
+        systemDeploymentService.insertRecord(systemDeploymentRepo);
     }
 
     private Date getDate(String deploymentDate) {

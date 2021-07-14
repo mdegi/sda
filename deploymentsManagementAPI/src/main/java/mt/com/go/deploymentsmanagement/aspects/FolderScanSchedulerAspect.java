@@ -23,13 +23,13 @@ public class FolderScanSchedulerAspect extends DeploymentsManagementAspect {
 
     @Around("allMethods()")
     public void logDurationAdvice(ProceedingJoinPoint joinPoint) {
-        System.out.println("----------- Starting method signature: "  + joinPoint.getSignature() + " Time: " + df.format(new Date()));
+        LOGGER.info("----------- Starting method signature: "  + joinPoint.getSignature() + " Time: " + df.format(new Date()));
         try {
             joinPoint.proceed();
         } catch (Throwable t) {
             LOGGER.error("Error occurred executing method: " + joinPoint.getSignature() + ": " + t.getMessage());
         }
-        System.out.println("----------- End method signature: "  + joinPoint.getSignature() + "      Time: " + df.format(new Date()));
+        LOGGER.info("----------- End method signature: "  + joinPoint.getSignature() + "      Time: " + df.format(new Date()));
     }
 
     @AfterThrowing(value = "allMethods()", throwing = "e")

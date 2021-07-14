@@ -1,7 +1,7 @@
 package mt.com.go.deploymentsmanagement.controller;
 
 import mt.com.go.deploymentmanagement.models.SystemDeployment;
-import mt.com.go.deploymentsmanagement.dao.SystemDeploymentDAO;
+import mt.com.go.deploymentsmanagement.dao.SystemDeploymentRepo;
 import mt.com.go.deploymentsmanagement.schedulingTasks.FolderScanScheduler;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,8 +55,8 @@ public class DeploymentsManagementControllerTests {
     @Test
     public void getDeploymentTotalDurationToDeployByDate_entriesFound() {
         String deploymentDate = "20210111";
-        List<SystemDeploymentDAO> deploymentList = new ArrayList<>();
-        deploymentList.add(new SystemDeploymentDAO());
+        List<SystemDeploymentRepo> deploymentList = new ArrayList<>();
+        deploymentList.add(new SystemDeploymentRepo());
 
         ResponseEntity responseEntity = new ResponseEntity<>(deploymentList, HttpStatus.OK);
         when(requestProcessor.getDeploymentTotalDurationToDeployByDate(anyString())).thenReturn(responseEntity);
@@ -67,7 +67,7 @@ public class DeploymentsManagementControllerTests {
     @Test
     public void getDeploymentTotalDurationToDeployByDate_noEntries() {
         String deploymentDate = "20210112";
-        List<SystemDeploymentDAO> deploymentList = new ArrayList<>();
+        List<SystemDeploymentRepo> deploymentList = new ArrayList<>();
 
         ResponseEntity responseEntity = new ResponseEntity<>(deploymentList, HttpStatus.OK);
         when(requestProcessor.getDeploymentTotalDurationToDeployByDate(anyString())).thenReturn(responseEntity);
@@ -113,8 +113,8 @@ public class DeploymentsManagementControllerTests {
         String dateTo = "20210111";
         String dateFrom = "20210111";
 
-        List<SystemDeploymentDAO> deploymentList = new ArrayList<>();
-        deploymentList.add(new SystemDeploymentDAO());
+        List<SystemDeploymentRepo> deploymentList = new ArrayList<>();
+        deploymentList.add(new SystemDeploymentRepo());
 
         ResponseEntity responseEntity = new ResponseEntity<>(deploymentList, HttpStatus.OK);
         when(requestProcessor.getAllSystemDeploymentsWithinDateRange(anyString(), anyString())).thenReturn(responseEntity);

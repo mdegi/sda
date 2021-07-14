@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SystemDeploymentDAO {
+public class SystemDeploymentRepo {
 
     @Id
     public String id;

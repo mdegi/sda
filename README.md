@@ -3,6 +3,7 @@
 The files need to run the application are as follows:
 - 20201106-export: deployments window exported file
 - DeploymentsAmanagement.postman_collection: postman requests
+- depmgr.postman_environment.json: postman enviroment settings
 - deploymentsmanagementconfigservice.tar: spring boot server that provides connection to cloud config and provides this service to other applications
 - deploymentsmanagementcontroller.tar: spring boot app to processes file changes and interacts with MongoDB
 

@@ -2,7 +2,7 @@ package mt.com.go.deploymentsmanagement.schedulingTasks;
 
 import mt.com.go.deploymentsmanagement.config.AppConfig;
 import mt.com.go.deploymentsmanagement.model.DeploymentEntry;
-import mt.com.go.deploymentsmanagement.dao.SystemDeploymentDAO;
+import mt.com.go.deploymentsmanagement.dao.SystemDeploymentRepo;
 import mt.com.go.deploymentsmanagement.objects.FileListDetails;
 import mt.com.go.deploymentsmanagement.objects.OSFile;
 import mt.com.go.deploymentsmanagement.service.FileService;
@@ -29,7 +29,7 @@ public class FolderScanScheduler {
 
     final MongoTemplate mongoTemplate;
 
-    private static final Logger log = LoggerFactory.getLogger(FolderScanScheduler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FolderScanScheduler.class);
     private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -49,6 +49,7 @@ public class FolderScanScheduler {
         this.deploymentEntry = deploymentEntry;
         this.fileService = fileService;
         fileService.setAppConfig(appConfig);
+        systemDeploymentService.deleteAllRecords();
     }
 
     //a scheduled method should have the void return type
@@ -56,22 +57,23 @@ public class FolderScanScheduler {
     //options are fixedRate / fixedDelay and cron
     @Scheduled(fixedDelayString = "${fileScanFixedRateMilliSeconds}", initialDelayString = "${fileScanInitialDelayMilliSeconds}")
     public void fileChangesScheduler() {
-        log.info("The time is now {}", timeFormat.format(new Date()));
+        LOGGER.info("The time is now {}", timeFormat.format(new Date()));
         processFileChangesIfAny();
     }
 
     @ManagedOperation
     public void processFileChangesIfAnyJMX() {
-        log.info("External call through JMX to process any file changes {}", timeFormat.format(new Date()));
+        LOGGER.info("External call through JMX to process any file changes {}", timeFormat.format(new Date()));
         processFileChangesIfAny();
     }
 
     public void processFileChangesIfAnyREST() {
-        log.info("REST call to process any file changes {}", timeFormat.format(new Date()));
+        LOGGER.info("REST call to process any file changes {}", timeFormat.format(new Date()));
         processFileChangesIfAny();
     }
 
     public void processFileChangesIfAny() {
+        LOGGER.info("Processing any file changes");
         FileListDetails comparedFiles = new FileListDetails();
 
         if (lastScannedFileSet == null) {
@@ -111,36 +113,35 @@ public class FolderScanScheduler {
     }
 
     private void deleteEntries(Date deploymentDate) {
-        log.info("Deleting DB Entries: " + deploymentDate);
-
+        LOGGER.info("Deleting DB Entries: " + deploymentDate);
         systemDeploymentService.deleteRecords(deploymentDate);
     }
 
     private void saveEntry(DeploymentEntry deploymentEntry, Date deploymentDate) {
-        log.info("Saving Deployment Entry: " + deploymentDate + " - " + deploymentEntry.getSystemName());
+        LOGGER.info("Saving Deployment Entry: " + deploymentDate + " - " + deploymentEntry.getSystemName());
 
-        SystemDeploymentDAO systemDeploymentDAO = new SystemDeploymentDAO();
-        systemDeploymentDAO.setLineNumber(deploymentEntry.getLineNumber());
-        systemDeploymentDAO.setSponsor(deploymentEntry.getSponsor());
-        systemDeploymentDAO.setStatus(deploymentEntry.getStatus());
-        systemDeploymentDAO.setStagingStatus(deploymentEntry.getStagingStatus());
-        systemDeploymentDAO.setSystemName(deploymentEntry.getSystemName());
-        systemDeploymentDAO.setProjectInitiative(deploymentEntry.getProjectInitiative());
-        systemDeploymentDAO.setDeploymentInstructions(deploymentEntry.getDeploymentInstructions());
-        systemDeploymentDAO.setDependencies(deploymentEntry.getDependencies());
-        systemDeploymentDAO.setReleaseNotes(deploymentEntry.getReleaseNotes());
-        systemDeploymentDAO.setContactPerson(deploymentEntry.getContactPerson());
-        systemDeploymentDAO.setPeerReviewer(deploymentEntry.getPeerReviewer());
-        systemDeploymentDAO.setActualSTGDeploymentDurationMinutes(deploymentEntry.getActualSTGDeploymentDurationMinutes());
-        systemDeploymentDAO.setProjectedDurationMinutes(deploymentEntry.getProjectedDurationMinutes());
-        systemDeploymentDAO.setActualProdDeploymentDurationMinutes(deploymentEntry.getActualProdDeploymentDurationMinutes());
-        systemDeploymentDAO.setCanBeDoneDuringTheDay(deploymentEntry.getCanBeDoneDuringTheDay());
-        systemDeploymentDAO.setDeploymentApplicationDate(deploymentEntry.getDeploymentApplicationDate());
-        systemDeploymentDAO.setDeploymentAutomation(deploymentEntry.getDeploymentAutomation());
-        systemDeploymentDAO.setDevPostDeploymentTasks(deploymentEntry.getDevPostDeploymentTasks());
-        systemDeploymentDAO.setDeploymentDate(deploymentDate);
+        SystemDeploymentRepo systemDeploymentRepo = new SystemDeploymentRepo();
+        systemDeploymentRepo.setLineNumber(deploymentEntry.getLineNumber());
+        systemDeploymentRepo.setSponsor(deploymentEntry.getSponsor());
+        systemDeploymentRepo.setStatus(deploymentEntry.getStatus());
+        systemDeploymentRepo.setStagingStatus(deploymentEntry.getStagingStatus());
+        systemDeploymentRepo.setSystemName(deploymentEntry.getSystemName());
+        systemDeploymentRepo.setProjectInitiative(deploymentEntry.getProjectInitiative());
+        systemDeploymentRepo.setDeploymentInstructions(deploymentEntry.getDeploymentInstructions());
+        systemDeploymentRepo.setDependencies(deploymentEntry.getDependencies());
+        systemDeploymentRepo.setReleaseNotes(deploymentEntry.getReleaseNotes());
+        systemDeploymentRepo.setContactPerson(deploymentEntry.getContactPerson());
+        systemDeploymentRepo.setPeerReviewer(deploymentEntry.getPeerReviewer());
+        systemDeploymentRepo.setActualSTGDeploymentDurationMinutes(deploymentEntry.getActualSTGDeploymentDurationMinutes());
+        systemDeploymentRepo.setProjectedDurationMinutes(deploymentEntry.getProjectedDurationMinutes());
+        systemDeploymentRepo.setActualProdDeploymentDurationMinutes(deploymentEntry.getActualProdDeploymentDurationMinutes());
+        systemDeploymentRepo.setCanBeDoneDuringTheDay(deploymentEntry.getCanBeDoneDuringTheDay());
+        systemDeploymentRepo.setDeploymentApplicationDate(deploymentEntry.getDeploymentApplicationDate());
+        systemDeploymentRepo.setDeploymentAutomation(deploymentEntry.getDeploymentAutomation());
+        systemDeploymentRepo.setDevPostDeploymentTasks(deploymentEntry.getDevPostDeploymentTasks());
+        systemDeploymentRepo.setDeploymentDate(deploymentDate);
 
-        systemDeploymentService.insertRecord(systemDeploymentDAO);
+        systemDeploymentService.insertRecord(systemDeploymentRepo);
     }
 
     private Date getDate(String deploymentDate) {
@@ -149,9 +150,8 @@ public class FolderScanScheduler {
         try {
             parsedDate = dateFormat.parse(deploymentDate);
         } catch (ParseException e) {
-            log.error("ParseException parsing date: " + deploymentDate);
+            LOGGER.error("ParseException parsing date: " + deploymentDate);
         }
         return parsedDate;
     }
-
 }

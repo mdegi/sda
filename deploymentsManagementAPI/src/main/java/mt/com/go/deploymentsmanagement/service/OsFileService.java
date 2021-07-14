@@ -30,6 +30,7 @@ public class OsFileService implements FileService {
     @SneakyThrows
     @Override
     public Set<OSFile> getFiles() {
+        LOGGER.info("Reading OS files ....");
         try (Stream<Path> stream = Files.walk(Paths.get(appConfig.getFileSystemPath()), 1)) {
             return stream
                     .filter(file -> !Files.isDirectory(file))
@@ -42,6 +43,7 @@ public class OsFileService implements FileService {
 
     @Override
     public FileListDetails compareFiles(Set<OSFile> currentFileList, Set<OSFile> lastScannedFileSet) {
+        LOGGER.info("Comparing OS files ....");
         FileListDetails compareResult = new FileListDetails();
 
         compareResult.getNewFiles().addAll(getOSFiles(currentFileList, lastScannedFileSet));
@@ -66,12 +68,14 @@ public class OsFileService implements FileService {
     }
 
     private Set<OSFile> getOSFiles(Set<OSFile> fileMasterSet, Set<OSFile> fileSubSet) {
+        LOGGER.info("Reading subset of OS files ....");
         return fileMasterSet.stream()
                 .filter(path -> fileSubSet.stream().noneMatch(lastFile -> lastFile.getFileName().equals(path.getFileName())))
                 .collect(Collectors.toSet());
     }
 
     private OSFile getOSFile(Path path) {
+        LOGGER.info("Getting OS files for path: " + path.toAbsolutePath().toString());
         long createdTime = 0;
         long modifiedTime = 0;
 
@@ -87,8 +91,8 @@ public class OsFileService implements FileService {
                 path.getFileName().toString(),
                 FilenameUtils.getExtension((path.getFileName().toString())),
                 path.toAbsolutePath().toString(),
-                modifiedTime,
-                createdTime
+                createdTime,
+                modifiedTime
         );
     }
 

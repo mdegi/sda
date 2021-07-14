@@ -22,7 +22,7 @@ public class AuthorityAspect extends DeploymentsManagementAspect{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorityAspect.class);
 
-    @Around("execution(* mt.com.go.deploymentsmanagement.controller.DeploymentsManagementController.getConfigVarsMapping())")
+    @Around("execution(* mt.com.go.deploymentsmanagement.controller.DeploymentsManagementController.*(..))")
     public Object isValidRequest(ProceedingJoinPoint joinPoint) throws Throwable {
 
         String requiredPermission = "configVars";

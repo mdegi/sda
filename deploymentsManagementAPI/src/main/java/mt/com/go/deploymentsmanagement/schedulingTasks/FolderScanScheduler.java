@@ -72,7 +72,8 @@ public class FolderScanScheduler {
         processFileChangesIfAny();
     }
 
-    public void processFileChangesIfAny() {
+    //Let's make sure that no process calls this method before it finishes its task
+    public synchronized void processFileChangesIfAny() {
         LOGGER.info("Processing any file changes");
         FileListDetails comparedFiles = new FileListDetails();
 
@@ -113,12 +114,12 @@ public class FolderScanScheduler {
     }
 
     private void deleteEntries(Date deploymentDate) {
-        LOGGER.info("Deleting DB Entries: " + deploymentDate);
+        LOGGER.info("Deleting DB Entries for: {}", deploymentDate);
         systemDeploymentService.deleteRecords(deploymentDate);
     }
 
     private void saveEntry(DeploymentEntry deploymentEntry, Date deploymentDate) {
-        LOGGER.info("Saving Deployment Entry: " + deploymentDate + " - " + deploymentEntry.getSystemName());
+        LOGGER.info("Saving Deployment Entry for: {} - {}" , deploymentDate, deploymentEntry.getSystemName());
 
         SystemDeploymentRepo systemDeploymentRepo = new SystemDeploymentRepo();
         systemDeploymentRepo.setLineNumber(deploymentEntry.getLineNumber());
@@ -150,7 +151,7 @@ public class FolderScanScheduler {
         try {
             parsedDate = dateFormat.parse(deploymentDate);
         } catch (ParseException e) {
-            LOGGER.error("ParseException parsing date: " + deploymentDate);
+            LOGGER.error("ParseException parsing date for {}: ", deploymentDate);
         }
         return parsedDate;
     }

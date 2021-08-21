@@ -27,13 +27,13 @@ public class RequestProcessor {
     }
 
     public ResponseEntity<?> getSystemsDeploymentByDate(String deploymentDate) {
-        LOGGER.info("Processing getSystemsDeploymentByDate: " + deploymentDate);
+        LOGGER.info("Processing getSystemsDeploymentByDate: {}", deploymentDate);
         List<SystemDeploymentRepo> systemDeploymentRepos = systemDeploymentService.getDeploymentsByDate(deploymentsManagementControllerHelper.getDate(deploymentDate));
         return new ResponseEntity<>(systemDeploymentRepos.stream().map(this::convertSystemDeployment).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     public ResponseEntity<?> getDeploymentTotalDurationToDeployByDate(String deploymentDate) {
-        LOGGER.info("Processing getDeploymentTotalDurationToDeployByDate: " + deploymentDate);
+        LOGGER.info("Processing getDeploymentTotalDurationToDeployByDate: {}", deploymentDate);
         List<SystemDeploymentRepo> deploymentList = systemDeploymentService.getDeploymentsByDate(deploymentsManagementControllerHelper.getDate(deploymentDate));
         if (!deploymentList.isEmpty()) {
             return  new ResponseEntity<>(deploymentList.stream()
@@ -44,7 +44,7 @@ public class RequestProcessor {
     }
 
     public ResponseEntity<?> getSystemsDeploymentByPostDeploymentStatus(String deploymentStatus) {
-        LOGGER.info("Processing getSystemsDeploymentByPostDeploymentStatus: " + deploymentStatus);
+        LOGGER.info("Processing getSystemsDeploymentByPostDeploymentStatus: {}", deploymentStatus);
         if (deploymentStatus == null  || deploymentStatus.equals("")) {
             return new ResponseEntity<>("Invalid deployment status value", HttpStatus.BAD_REQUEST);
         } else {
@@ -54,13 +54,13 @@ public class RequestProcessor {
     }
 
     public ResponseEntity<?> getAllSystemDeploymentsWithinDateRange(String dateFrom, String dateTo) {
-        LOGGER.info("Processing getAllSystemDeploymentsWithinDateRange: " + dateFrom + " - " + dateTo);
+        LOGGER.info("Processing getAllSystemDeploymentsWithinDateRange: {} - {}",dateFrom, dateTo);
         List<SystemDeploymentRepo> deploymentList = systemDeploymentService.getDeploymentsByDateRange(deploymentsManagementControllerHelper.getDate(dateFrom), deploymentsManagementControllerHelper.getDate(dateTo));
         return new ResponseEntity<>(deploymentList.stream().map(this::convertSystemDeployment).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     public ResponseEntity<?> getAllDeploymentsBySystem(String systemName) {
-        LOGGER.info("Processing getAllDeploymentsBySystem: " + systemName);
+        LOGGER.info("Processing getAllDeploymentsBySystem: {}", systemName);
         if (systemName == null  || systemName.equals("")) {
             return new ResponseEntity<>("System cannot be left blank in request", HttpStatus.BAD_REQUEST);
         } else {
@@ -70,7 +70,7 @@ public class RequestProcessor {
     }
 
     private SystemDeployment convertSystemDeployment(SystemDeploymentRepo systemDeploymentRepo) {
-        LOGGER.info("Converting entity object to systemDeployment object : " + systemDeploymentRepo.getDeploymentDate() + " - " + systemDeploymentRepo.getSystemName());
+        LOGGER.info("Converting entity object to systemDeployment object: {} - {}", systemDeploymentRepo.getDeploymentDate(), systemDeploymentRepo.getSystemName());
         mt.com.go.deploymentmanagement.models.SystemDeployment systemDeployment = new mt.com.go.deploymentmanagement.models.SystemDeployment();
         systemDeployment.setId(systemDeploymentRepo.getId());
         systemDeployment.setLineNumber(systemDeploymentRepo.getLineNumber());

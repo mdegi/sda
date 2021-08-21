@@ -84,7 +84,7 @@ public class OsFileService implements FileService {
             createdTime = fileAttributes.creationTime().toMillis();
             modifiedTime = fileAttributes.lastModifiedTime().toMillis();
         } catch (IOException e) {
-            LOGGER.error("Error getting File Attributes-:\n" + e.getMessage());
+            LOGGER.error("Error getting File Attributes-: {}", e.getMessage());
         }
 
         return new OSFile(

@@ -44,7 +44,7 @@ public class DeploymentsManagementController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     public ResponseEntity<?> getSystemsDeploymentByDate(@PathVariable(PATH_VAR_DEPLOYMENT_DATE) @Pattern(regexp=MAPPING_DATE_REGEX) String deploymentDate) {
-        LOGGER.info("Received GET request for getSystemsDeploymentByDate for date: " + deploymentDate);
+        LOGGER.info("Received GET request for getSystemsDeploymentByDate for date: {}", deploymentDate);
         return requestProcessor.getSystemsDeploymentByDate(deploymentDate);
     }
 
@@ -52,7 +52,7 @@ public class DeploymentsManagementController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     public ResponseEntity<?> getSystemsDeploymentByPostDeploymentStatus(@PathVariable String deploymentStatus) {
-        LOGGER.info("Received GET request for getSystemsDeploymentByPostDeploymentStatus for status: " + deploymentStatus);
+        LOGGER.info("Received GET request for getSystemsDeploymentByPostDeploymentStatus for status: {}", deploymentStatus);
         return requestProcessor.getSystemsDeploymentByPostDeploymentStatus(deploymentStatus);
     }
 
@@ -61,7 +61,7 @@ public class DeploymentsManagementController {
             method = RequestMethod.GET)
     public ResponseEntity<?> getDeploymentTotalDurationToDeployByDate(@PathVariable(PATH_VAR_DEPLOYMENT_DATE)
                                                                       @Pattern(regexp=MAPPING_DATE_REGEX) String deploymentDate) {
-        LOGGER.info("Received GET request for getDeploymentTotalDurationToDeployByDate for deploymentDate: " + deploymentDate);
+        LOGGER.info("Received GET request for getDeploymentTotalDurationToDeployByDate for deploymentDate: {}", deploymentDate);
         return requestProcessor.getDeploymentTotalDurationToDeployByDate(deploymentDate);
     }
 
@@ -70,7 +70,7 @@ public class DeploymentsManagementController {
             method = RequestMethod.GET)
     public ResponseEntity<?> getAllSystemDeploymentsWithinDateRange(@PathVariable(PATH_VAR_DATE_FROM) @Pattern(regexp = MAPPING_DATE_REGEX) String dateFrom,
                                                                     @PathVariable(PATH_VAR_DATE_TO) @Pattern(regexp = MAPPING_DATE_REGEX) String dateTo) {
-        LOGGER.info("Received GET request for getAllSystemDeploymentsWithinDateRange for deploymentDateRange: " + dateFrom + " - " + dateTo);
+        LOGGER.info("Received GET request for getAllSystemDeploymentsWithinDateRange for deploymentDateRange: {} - {}" , dateFrom, dateTo);
         return requestProcessor.getAllSystemDeploymentsWithinDateRange(dateFrom, dateTo);
     }
 
@@ -78,7 +78,7 @@ public class DeploymentsManagementController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE},
             method = RequestMethod.GET)
     public ResponseEntity<?> getAllDeploymentsBySystem(@PathVariable String systemName) {
-        LOGGER.info("Received GET request for getAllDeploymentsBySystem for systemName: " + systemName);
+        LOGGER.info("Received GET request for getAllDeploymentsBySystem for systemName: {}", systemName);
         return  requestProcessor.getAllDeploymentsBySystem(systemName);
     }
 
